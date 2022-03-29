@@ -1,18 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 
-type Props = {};
+interface Props {
+  isOn: boolean;
+  onClick: () => void;
+}
 
-const Switch = (props: Props) => {
-  const [isOn, setIsOn] = useState(false);
-
-  const handleSwitchClick = () => {
-    setIsOn(!isOn);
-  };
-
+const Switch = ({ isOn, onClick }: Props) => {
   return (
     <button
       className="flex items-center relative w-11 h-6 "
-      onClick={handleSwitchClick}
+      onClick={onClick}
       type="button"
     >
       <div

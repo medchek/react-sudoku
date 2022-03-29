@@ -1,23 +1,49 @@
 import React from "react";
-import DeleteNumberButton from "./buttons/DeleteNumberButton";
-import SwitchButton from "./buttons/SwitchButton";
-import SetNumberButton from "./buttons/SetNumberButton";
+import { toggleAutoNotes as toggleStoreAutoNotes } from "../store/slices/gridSlice";
+import { RootState } from "../store/store";
+import { useAppDispatch, useAppSelector } from "../store/storeHooks";
+import Pad from "./Pad";
+import SwitchableOption from "./SwitchableOption";
 
 const Operations = () => {
-  const numberButtons = [1, 2, 3, 4, 5, 6, 7, 8, 9].map((n, i) => (
-    <SetNumberButton key={i}>{n}</SetNumberButton>
-  ));
+  const isAutoNotesOn = useAppSelector(
+    (state: RootState) => state.grid.autoNotes
+  );
+
+  const dispatch = useAppDispatch();
+
+  const toggleAutoNotes = () => {
+    dispatch(toggleStoreAutoNotes());
+  };
+
   return (
-    <section id="numbers" className="flex space-x-3">
-      <div className="flex flex-col space-y-3">
-        <SwitchButton text="Note Mode" />
-        <SwitchButton text="Hint" />
-      </div>
-      <div className="grid grid-rows-2 grid-cols-5 gap-x-3 gap-y-3">
-        {numberButtons}
-        <DeleteNumberButton />
-      </div>
-    </section>
+    <div
+      id="operations"
+      className="flex justify-between h-44 min-h-[11rem] py-6  border-t-2"
+    >
+      <section id="helpers" className="space-y-2 w-60">
+        <SwitchableOption
+          text="Auto Notes"
+          isOn={isAutoNotesOn}
+          onClick={toggleAutoNotes}
+        />
+        <SwitchableOption
+          text="Errors Detector"
+          isOn={false}
+          onClick={() => null}
+        />
+        <SwitchableOption
+          text="Disable unusable"
+          isOn={false}
+          onClick={() => null}
+        />
+      </section>
+      <Pad />
+      <section id="timer" className="flex flex-col items-end text-xl w-60">
+        <p className="font-medium text-darkGrey">Elapsed time</p>
+        <p className="text-primary">0:30</p>
+      </section>
+    </div>
   );
 };
 
