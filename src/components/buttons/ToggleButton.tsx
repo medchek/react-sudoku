@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import BaseButton from "./BaseButton";
-import styles from "./SwitchButton.module.css";
+import styles from "./ToggleButton.module.css";
 
 interface Props {
   text: string;
 }
 
-const SwitchButton = ({ text }: Props) => {
+const ToggleButton = ({ text }: Props) => {
   const [isOn, setIsOn] = useState(false);
 
   const handleOnClick = () => {
@@ -33,4 +33,4 @@ const SwitchButton = ({ text }: Props) => {
   );
 };
 
-export default SwitchButton;
+export default ToggleButton;
