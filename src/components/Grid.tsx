@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo, lazy, Suspense } from "react";
 import {
   HorizontalDirections,
   VerticalDirections,
@@ -13,11 +13,18 @@ import { RootState } from "../store/store";
 import { useAppDispatch, useAppSelector } from "../store/storeHooks";
 import Row from "./Row";
 
+const Paused = lazy(() => import("./Paused"));
+
 const Grid = () => {
-  const sudokuGrid = useAppSelector((state: RootState) => state.grid.grid);
+  const isPaused = useAppSelector((state: RootState) => state.timer.isPaused);
+
+  const sudokuStoreGrid = useAppSelector((state: RootState) => state.grid.grid);
   const dispatch = useAppDispatch();
 
+  const sudokuGrid = useMemo(() => sudokuStoreGrid, [sudokuStoreGrid]);
+
   useEffect(() => {
+    if (isPaused) return;
     const handleKeydown = (e: KeyboardEvent) => {
       // console.log(`handling keydown ${e.key} - ${e.code}`);
       const key = e.code;
@@ -90,21 +97,30 @@ const Grid = () => {
         capture: true,
       });
     };
-  }, []);
+  }, [dispatch]);
 
-  console.log("rending grid");
-
-  const displayGrid = sudokuGrid.map((row, rowIndex) => {
-    return <Row row={row} rowIndex={rowIndex} key={`row-${rowIndex}`} />;
-  });
+  const displayGrid = useMemo(() => {
+    return sudokuGrid.map((row, rowIndex) => {
+      return <Row row={row} rowIndex={rowIndex} key={`row-${rowIndex}`} />;
+    });
+  }, [sudokuGrid]);
 
   return (
     <div
       id="grid"
       tabIndex={-1}
-      className="flex flex-col items-center justify-center outline-none"
+      className="absolute flex flex-col items-center justify-center outline-none w-[630px] h-[630px]"
     >
       {displayGrid}
+      <Suspense
+        fallback={
+          <div className="flex flex-col items-center justify-center absolute top-0 w-full h-full bg-white">
+            Loading...
+          </div>
+        }
+      >
+        {isPaused && <Paused />}
+      </Suspense>
     </div>
   );
 };
