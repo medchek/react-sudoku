@@ -1,6 +1,14 @@
-import React from "react";
-import { getCellPossibilities, getSquareNumber } from "../lib/utils/utils";
-import { CellState, setSelectedCell } from "../store/slices/gridSlice";
+import React, { useMemo, MouseEvent } from "react";
+import {
+  doesCellHaveDuplicates,
+  getCellPossibilities,
+  getSquareNumber,
+} from "../lib/utils/utils";
+import {
+  CellState,
+  resetCellNumber,
+  setSelectedCell,
+} from "../store/slices/gridSlice";
 import { RootState } from "../store/store";
 import { useAppDispatch, useAppSelector } from "../store/storeHooks";
 
@@ -11,6 +19,7 @@ interface Props {
 }
 
 const Cell = ({ cell, col, row }: Props) => {
+  // console.log("cell");
   // the selected cell coordinates in the store
   const selectedCell = useAppSelector(
     (state: RootState) => state.grid.selectedCell
@@ -18,6 +27,11 @@ const Cell = ({ cell, col, row }: Props) => {
   const isAutoNotes = useAppSelector(
     (state: RootState) => state.grid.autoNotes
   );
+
+  const isErrorDetectorActive = useAppSelector(
+    (state: RootState) => state.grid.errorDetector
+  );
+
   // the grid array in the store
   const grid = useAppSelector((state: RootState) => state.grid.grid);
 
@@ -26,25 +40,19 @@ const Cell = ({ cell, col, row }: Props) => {
   /** The square number  of the local cell (i.e. this instance the the component)*/
   const currentCellSquareNumber = getSquareNumber({ row, col });
 
-  /**
-   *  the square which the currently selected cell (in the store) belongs to
-   */
-  const selectedCellSquareNumber = (): number | null => {
-    if (selectedCell.row === null || selectedCell.col === null) return null;
-    return getSquareNumber({
-      row: selectedCell.row,
-      col: selectedCell.col,
-    });
-  };
+  // track row/col/squares duplicates in the current cell
+  const cellHasDuplicates = useMemo(() => {
+    if (!isErrorDetectorActive) return false;
+    // only update if the grid changes are related to this cell
+    // i.e. if the target cell that changed is part of this cell's row, col, or square
+    return doesCellHaveDuplicates({ grid, col, row });
+  }, [row, col, grid, isErrorDetectorActive]);
 
-  const isHighlightedInSquare =
-    currentCellSquareNumber === selectedCellSquareNumber();
+  const isHighlightedInSquare = currentCellSquareNumber === selectedCell.square;
 
   // whether this cell instance row & col indices equal the selectedCell row/col values in the store
   const isCurrentlySelected: boolean =
-    selectedCell.col === col &&
-    selectedCell.row === row &&
-    selectedCell.square === currentCellSquareNumber;
+    selectedCell.col === col && selectedCell.row === row;
 
   /**
    * Returns The number value of the selected cell in the store
@@ -55,28 +63,6 @@ const Cell = ({ cell, col, row }: Props) => {
     const col = selectedCell.col;
     if (row === null || col === null) return null;
     return grid[row][col].number;
-  };
-
-  /**
-   * Returns whether the number of this cell instance is already present in the col/row/square
-   */
-  const isCellNumberForbidden = (): boolean => {
-    const storeSelectedNumber = storeSelectedCellNumber();
-
-    if (storeSelectedNumber !== null) {
-      // only process the cells that belong to the same col, row, sqr
-
-      if (
-        row === selectedCell.row ||
-        col === selectedCell.col ||
-        currentCellSquareNumber === selectedCell.square
-      ) {
-        // if they have the same number in col or row or square, return true
-        if (cell.number === storeSelectedNumber) return true;
-      }
-    }
-
-    return false;
   };
 
   /**
@@ -98,10 +84,38 @@ const Cell = ({ cell, col, row }: Props) => {
       isHighlightedInSquare) &&
     !isCurrentlySelected;
 
+  // the possibilites that can go in the target cell
+  const cellPossibilities = useMemo(() => {
+    if (cell.number === null) {
+      if (isAutoNotes) {
+        return getCellPossibilities(grid, { row, col });
+        // return possiblities
+      }
+    } else return null;
+  }, [cell.number, grid, isAutoNotes, row, col]);
+
+  const displayPossibilites = useMemo(() => {
+    const possibilites = cellPossibilities;
+    if (possibilites && possibilites.length > 0) {
+      const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+      return numbers.map((n) => {
+        const show = possibilites.indexOf(n) !== -1;
+        return (
+          <span key={n} className={show ? "visible" : "invisible"}>
+            {n}
+          </span>
+        );
+      });
+    } else {
+      return null;
+    }
+  }, [cellPossibilities]);
+
   /**
    * Sets the selected cell coordinates in the store
    */
-  const handleOnClick = () => {
+  const handleOnClick = (e: MouseEvent) => {
     dispatch(
       setSelectedCell({
         row,
@@ -110,35 +124,25 @@ const Cell = ({ cell, col, row }: Props) => {
       })
     );
   };
-
-  // he possibilites that can go in the target cell
-  const cellPossibilities = getCellPossibilities(grid, { row, col });
-
-  const isNumberForbidden = () => {
-    if (cell.number !== null) {
-      return cellPossibilities.indexOf(cell.number) !== -1;
-    }
-    return false;
-  };
-
-  const displayPossibilites = (): JSX.Element[] => {
-    const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-
-    return numbers.map((n) => {
-      const show = cellPossibilities.indexOf(n) !== -1;
-      return (
-        <span key={n} className={show ? "visible" : "invisible"}>
-          {n}
-        </span>
-      );
-    });
+  /**
+   * Resets the selected cell coordinates in the store
+   */
+  const handleOnMiddleMouseClick = (e: MouseEvent) => {
+    dispatch(
+      setSelectedCell({
+        row,
+        col,
+        square: currentCellSquareNumber,
+      })
+    );
+    dispatch(resetCellNumber());
   };
 
   return (
     <div
       className={[
         // "flex items-center justify-center w-[84px] h-[84px] ",
-        "relative flex items-center justify-center w-[70px] h-[70px] text-[1.7rem] font-medium hover:shadow-inner outline-none cursor-pointer select-none transition-all",
+        "relative flex items-center justify-center w-[70px] h-[70px] text-[1.7rem] font-medium hover:shadow-inner outline-none cursor-pointer select-none ",
         row === 0 ? "border-t-4 border-primaryLight" : "",
         row === 8 || row === 2 || row === 5
           ? "border-b-4 border-primaryLight"
@@ -166,14 +170,15 @@ const Cell = ({ cell, col, row }: Props) => {
         // `cell-row-${row} cell-col-${col} cell-sqr-${currentCellSquareNumber}`,
 
         // whether the current cell is the one selected
-        isNumberForbidden()
-          ? "bg-red-50 text-red-500"
+        // cell.isError
+        cellHasDuplicates
+          ? `bg-red-100 ${!cell.isProtected ? "!text-red-500" : ""}`
           : // if the current cell instance the one selected
           isCurrentlySelected
-          ? "bg-primaryLight"
+          ? "is-selected bg-primaryLight"
           : // if the current cell NUMBER value matches the one selectedCell points to in the grid
           isCurrentCellNumberSameAsSelected // will basically highlight the same number in all the other cells
-          ? "bg-primaryLight/50"
+          ? "bg-primaryLight/40"
           : // whether the cell should be highlighted as part of row/col/sqr
           isHighlighted
           ? "bg-slate-100/80"
@@ -183,17 +188,18 @@ const Cell = ({ cell, col, row }: Props) => {
         .join(" ")
         .trim()}
       onClick={handleOnClick}
+      onAuxClick={handleOnMiddleMouseClick}
       // onBlur={handleOnBlur}
     >
       <span>{cell.number}</span>
 
       {isAutoNotes && cell.number === null && (
         <div className="possibilites grid grid-cols-3 grid-rows-3 justify-items-center items-center w-full h-full bg-transparent absolute left-0 top-0 right-0 bottom-0 text-darkGrey/70 text-sm font-thin">
-          {displayPossibilites()}
+          {displayPossibilites}
         </div>
       )}
     </div>
   );
 };
-
+// only rerender when selected cell matches the component row / col indexes
 export default Cell;
