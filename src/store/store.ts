@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import gridReducer from "./slices/gridSlice";
+import timerReducer from "./slices/timerSlice";
 
 export const store = configureStore({
   reducer: {
     grid: gridReducer,
+    timer: timerReducer,
   },
 });
 
