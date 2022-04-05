@@ -24,6 +24,7 @@ interface GridState {
   grid: CellState[][];
   selectedCell: NullableCellCoordinates;
   autoNotes: boolean;
+  noteMode: boolean;
   errorDetector: boolean;
   disableUnusable: boolean;
 }
@@ -50,6 +51,7 @@ const initialState: GridState = {
     square: null,
   },
   autoNotes: false,
+  noteMode: false,
   errorDetector: true,
   disableUnusable: false,
 };
@@ -149,6 +151,15 @@ export const gridSlice = createSlice({
     toggleAutoNotes(state) {
       state.autoNotes = !state.autoNotes;
     },
+    setAutoNotes(state, action: PayloadAction<boolean>) {
+      if (state.autoNotes !== action.payload) state.autoNotes = action.payload;
+    },
+    toggleNoteMode(state) {
+      state.noteMode = !state.noteMode;
+    },
+    setNoteMode(state, action: PayloadAction<boolean>) {
+      if (state.noteMode !== action.payload) state.noteMode = action.payload;
+    },
     toggleErrorDetector(state) {
       state.errorDetector = !state.errorDetector;
     },
@@ -175,6 +186,9 @@ export const {
   setCellNumber,
   resetCellNumber,
   toggleAutoNotes,
+  setAutoNotes,
+  toggleNoteMode,
+  setNoteMode,
   toggleErrorDetector,
   toggleDisableUnusable,
   revealHint,
