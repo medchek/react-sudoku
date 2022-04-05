@@ -230,3 +230,63 @@ export const getCellPossibilities = (
   // return only the numbers not present in the forbidden array
   return numbers.filter((n) => fobiddenArray.indexOf(n) === -1);
 };
+
+interface GridGetter {
+  grid: CellState[][];
+  row: number;
+  col: number;
+}
+
+/**
+ * Checks if the number at the row col index coordinates inside the grid happens more than once in the row/col/square
+ * @param params grid object and the target row col indices to check
+ * @returns true if the number happens more than once, false otherwise
+ */
+export const doesCellHaveDuplicates = ({
+  grid,
+  row,
+  col,
+}: GridGetter): boolean => {
+  const cell = grid[row][col];
+  const cellNumber = cell.number;
+  if (cellNumber === null) return false;
+
+  // checking the row for duplicates
+  const rowDupe = grid[row].filter(
+    (rowCell) => rowCell.number !== null && rowCell.number === cellNumber
+  );
+
+  if (rowDupe.length > 1) return true;
+
+  let colCounter = 0;
+
+  for (let rowIndex = 0; rowIndex < grid.length; rowIndex++) {
+    const colCell = grid[rowIndex][col];
+    if (colCell.number !== null && colCell.number === cellNumber) {
+      // if the col contains the target number, increment it
+      // if it is encountered again and the count is larger than
+      if (++colCounter > 1) return true;
+    }
+  }
+
+  // checking the square
+  let sqrCounter = 0;
+  const squareYStart = getInitialSquareIndex(row);
+  const squareYEnd = getLastSquareIndex(row);
+  const squareXStart = getInitialSquareIndex(col);
+  const squareXEnd = getLastSquareIndex(col);
+
+  for (let rowIndex = squareYStart; rowIndex <= squareYEnd; rowIndex++) {
+    const row = grid[rowIndex];
+    for (let colIndex = squareXStart; colIndex <= squareXEnd; colIndex++) {
+      const sqrCell = row[colIndex];
+      if (sqrCell.number !== null && sqrCell.number === cellNumber) {
+        // if the col contains the target number, increment it
+        // if it is encountered again and the count is larger than
+        if (++sqrCounter > 1) return true;
+      }
+    }
+  }
+  // if all checks are done, the number is not duplicated in any cell
+  return false;
+};
