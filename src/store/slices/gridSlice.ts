@@ -1,4 +1,4 @@
-import { pruneSudokuGridCells } from "./../../lib/utils/utils";
+import { pruneSudokuGridCells, getSquareNumber } from "./../../lib/utils/utils";
 import { HorizontalDirections } from "./../../lib/enums/directions";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { VerticalDirections } from "../../lib/enums/directions";
@@ -24,6 +24,8 @@ interface GridState {
   grid: CellState[][];
   selectedCell: NullableCellCoordinates;
   autoNotes: boolean;
+  errorDetector: boolean;
+  disableUnusable: boolean;
 }
 
 const grid: number[][] = [
@@ -38,7 +40,7 @@ const grid: number[][] = [
   [4, 7, 6, 2, 1, 5, 8, 3, 9],
 ];
 
-const prunedGrid = pruneSudokuGridCells(grid, Difficulty.Insane);
+const prunedGrid = pruneSudokuGridCells(grid, Difficulty.Easy);
 
 const initialState: GridState = {
   grid: prunedGrid,
@@ -48,6 +50,8 @@ const initialState: GridState = {
     square: null,
   },
   autoNotes: false,
+  errorDetector: true,
+  disableUnusable: false,
 };
 
 export const gridSlice = createSlice({
@@ -59,9 +63,10 @@ export const gridSlice = createSlice({
       const col = state.selectedCell.col;
       if (row === null || col === null) return;
 
+      const cell = state.grid[row][col];
+
       const number = action.payload;
       if (number < 1 || number > 9) return;
-      const cell = state.grid[row][col];
       if (cell.number !== number && !cell.isProtected) {
         state.grid[row][col].number = number;
       }
@@ -70,8 +75,9 @@ export const gridSlice = createSlice({
       const row = state.selectedCell.row;
       const col = state.selectedCell.col;
       if (row === null || col === null) return;
+      const cell = state.grid[row][col];
 
-      if (!state.grid[row][col].isProtected) {
+      if (cell.number !== null && !cell.isProtected) {
         state.grid[row][col].number = null;
       }
     },
@@ -90,8 +96,9 @@ export const gridSlice = createSlice({
     },
     moveSelectedRow(state, action: PayloadAction<VerticalDirections>) {
       const verticalDirection = action.payload;
-      if (state.selectedCell.row === null) {
+      if (state.selectedCell.row === null || state.selectedCell.col === null) {
         state.selectedCell.row = state.selectedCell.col = 0;
+        state.selectedCell.square = 1;
       } else {
         const currentSelectedRow = state.selectedCell.row;
         if (verticalDirection === VerticalDirections.Down) {
@@ -101,12 +108,22 @@ export const gridSlice = createSlice({
           if (currentSelectedRow - 1 < 0) return;
           state.selectedCell.row--;
         }
+        // moving the square as well
+        const square = getSquareNumber({
+          row: state.selectedCell.row,
+          col: state.selectedCell.col,
+        });
+
+        if (state.selectedCell.square !== square) {
+          state.selectedCell.square = square;
+        }
       }
     },
     moveSelectedCol(state, action: PayloadAction<HorizontalDirections>) {
       const horizontalDirection = action.payload;
-      if (state.selectedCell.col === null) {
+      if (state.selectedCell.col === null || state.selectedCell.row === null) {
         state.selectedCell.col = state.selectedCell.row = 0;
+        state.selectedCell.square = 1;
       } else {
         const currentSelectedCol = state.selectedCell.col;
         if (horizontalDirection === HorizontalDirections.Right) {
@@ -116,10 +133,36 @@ export const gridSlice = createSlice({
           if (currentSelectedCol - 1 < 0) return;
           state.selectedCell.col--;
         }
+
+        // moving the square as well
+
+        const square = getSquareNumber({
+          row: state.selectedCell.row,
+          col: state.selectedCell.col,
+        });
+
+        if (state.selectedCell.square !== square) {
+          state.selectedCell.square = square;
+        }
       }
     },
     toggleAutoNotes(state) {
       state.autoNotes = !state.autoNotes;
+    },
+    toggleErrorDetector(state) {
+      state.errorDetector = !state.errorDetector;
+    },
+    toggleDisableUnusable(state) {
+      state.disableUnusable = !state.disableUnusable;
+    },
+    revealHint(state) {
+      // reveals a hint at the target cell
+      const { row, col } = state.selectedCell;
+      if (row === null || col === null) return;
+
+      const cellData = state.grid[row][col];
+      state.grid[row][col].number = cellData.immutableNumber;
+      state.grid[row][col].isProtected = true;
     },
   },
 });
@@ -132,5 +175,8 @@ export const {
   setCellNumber,
   resetCellNumber,
   toggleAutoNotes,
+  toggleErrorDetector,
+  toggleDisableUnusable,
+  revealHint,
 } = gridSlice.actions;
 export default gridSlice.reducer;
