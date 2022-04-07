@@ -70,7 +70,7 @@ const ToggleButton = ({ text, disabled }: Props) => {
           title="Note Mode"
         >
           <p className="text-zinc-700">
-            Activating Note Mode will disable Auto Notes
+            Activating Note Mode will disable Auto Notes.
           </p>
         </Modal>
       )}
