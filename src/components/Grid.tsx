@@ -17,6 +17,7 @@ const Paused = lazy(() => import("./Paused"));
 
 const Grid = () => {
   const isPaused = useAppSelector((state: RootState) => state.timer.isPaused);
+  const isNoteMode = useAppSelector((state: RootState) => state.grid.noteMode);
 
   const sudokuStoreGrid = useAppSelector((state: RootState) => state.grid.grid);
   const dispatch = useAppDispatch();
@@ -27,6 +28,9 @@ const Grid = () => {
     if (isPaused) return;
     const handleKeydown = (e: KeyboardEvent) => {
       // console.log(`handling keydown ${e.key} - ${e.code}`);
+
+      // console.log("modifier?", e.getModifierState("Shift"));
+
       const key = e.code;
       switch (key) {
         case "ArrowUp":
@@ -97,7 +101,7 @@ const Grid = () => {
         capture: true,
       });
     };
-  }, [dispatch]);
+  }, [dispatch, isPaused]);
 
   const displayGrid = useMemo(() => {
     return sudokuGrid.map((row, rowIndex) => {
