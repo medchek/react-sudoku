@@ -1,4 +1,8 @@
-import { pruneSudokuGridCells, getSquareNumber } from "./../../lib/utils/utils";
+import {
+  pruneSudokuGridCells,
+  getSquareNumber,
+  createNotesArray,
+} from "./../../lib/utils/utils";
 import { HorizontalDirections } from "./../../lib/enums/directions";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { VerticalDirections } from "../../lib/enums/directions";
@@ -15,16 +19,20 @@ export interface NullableCellCoordinates {
   square: number | null;
 }
 
+type Notes = { [noteNumber: string]: boolean };
+
 export interface CellState {
   number: number | null;
   immutableNumber: number;
   isProtected: boolean;
+  notes: number[];
 }
 interface GridState {
   grid: CellState[][];
   selectedCell: NullableCellCoordinates;
   autoNotes: boolean;
   noteMode: boolean;
+  notes: number[][][];
   errorDetector: boolean;
   disableUnusable: boolean;
 }
@@ -52,6 +60,7 @@ const initialState: GridState = {
   },
   autoNotes: false,
   noteMode: false,
+  notes: createNotesArray(),
   errorDetector: true,
   disableUnusable: false,
 };
@@ -61,27 +70,58 @@ export const gridSlice = createSlice({
   initialState,
   reducers: {
     setCellNumber(state, action: PayloadAction<number>) {
-      const row = state.selectedCell.row;
-      const col = state.selectedCell.col;
+      const { row, col } = state.selectedCell;
+
       if (row === null || col === null) return;
 
       const cell = state.grid[row][col];
 
       const number = action.payload;
       if (number < 1 || number > 9) return;
-      if (cell.number !== number && !cell.isProtected) {
-        state.grid[row][col].number = number;
+      if (!cell.isProtected) {
+        if (!state.noteMode) {
+          // if note mode is not active, set the cell number instead of the notes
+          if (cell.number !== number) {
+            state.grid[row][col].number = number;
+            // check if the number needs to be removed from the notes related to the target cell
+            if (!state.autoNotes) {
+            }
+          }
+        } else {
+          const noteIndex = number - 1;
+          // set notes otherwise
+          const noteNumber = state.notes[row][col][noteIndex];
+          // if the number number is 0 (i.e. not set) set it to the requested number, otherwise, set it back to 0
+          state.notes[row][col][noteIndex] = noteNumber === 0 ? number : 0;
+        }
       }
     },
     resetCellNumber(state) {
-      const row = state.selectedCell.row;
-      const col = state.selectedCell.col;
+      const { row, col } = state.selectedCell;
+
       if (row === null || col === null) return;
       const cell = state.grid[row][col];
+      console.log("restting");
+      // reset the cell notes as well
+      state.notes[row][col] = [0, 0, 0, 0, 0, 0, 0, 0, 0];
 
       if (cell.number !== null && !cell.isProtected) {
         state.grid[row][col].number = null;
       }
+    },
+    resetCellNotes(state) {
+      const { row, col } = state.selectedCell;
+      if (row === null || col === null) return;
+
+      state.notes[row][col] = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+    },
+    removeCellNoteNumber(
+      state,
+      action: PayloadAction<{ number: number; row: number; col: number }>
+    ) {
+      const { number, row, col } = action.payload;
+
+      state.notes[row][col][number - 1] = 0;
     },
 
     setSelectedCell(state, action: PayloadAction<CellCoordinates>) {
@@ -185,6 +225,8 @@ export const {
   moveSelectedCol,
   setCellNumber,
   resetCellNumber,
+  resetCellNotes,
+  removeCellNoteNumber,
   toggleAutoNotes,
   setAutoNotes,
   toggleNoteMode,

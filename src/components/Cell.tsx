@@ -1,4 +1,4 @@
-import React, { useMemo, MouseEvent } from "react";
+import React, { useMemo, MouseEvent, useEffect } from "react";
 import {
   doesCellHaveDuplicates,
   getCellPossibilities,
@@ -6,6 +6,7 @@ import {
 } from "../lib/utils/utils";
 import {
   CellState,
+  removeCellNoteNumber,
   resetCellNumber,
   setSelectedCell,
 } from "../store/slices/gridSlice";
@@ -20,6 +21,12 @@ interface Props {
 
 const Cell = ({ cell, col, row }: Props) => {
   // console.log("cell");
+
+  // the grid array in the store
+  const grid = useAppSelector((state: RootState) => state.grid.grid);
+  const userCellNotes = useAppSelector(
+    (state: RootState) => state.grid.notes[row][col]
+  );
   // the selected cell coordinates in the store
   const selectedCell = useAppSelector(
     (state: RootState) => state.grid.selectedCell
@@ -27,26 +34,42 @@ const Cell = ({ cell, col, row }: Props) => {
   const isAutoNotes = useAppSelector(
     (state: RootState) => state.grid.autoNotes
   );
+  // const isNoteMode = useAppSelector((state: RootState) => state.grid.noteMode);
 
   const isErrorDetectorActive = useAppSelector(
     (state: RootState) => state.grid.errorDetector
   );
 
-  // the grid array in the store
-  const grid = useAppSelector((state: RootState) => state.grid.grid);
-
   const dispatch = useAppDispatch();
 
   /** The square number  of the local cell (i.e. this instance the the component)*/
   const currentCellSquareNumber = getSquareNumber({ row, col });
+  /**
+   * Returns The number value of the selected cell in the store
+   * @returns the number of the selected cell, or null if no cell is selected
+   */
+  const storeSelectedCellNumber = useMemo(() => {
+    const row = selectedCell.row;
+    const col = selectedCell.col;
+    if (row === null || col === null) return null;
+    return grid[row][col].number;
+  }, [grid, selectedCell]);
 
   // track row/col/squares duplicates in the current cell
   const cellHasDuplicates = useMemo(() => {
-    if (!isErrorDetectorActive) return false;
+    if (!isErrorDetectorActive && cell.number !== storeSelectedCellNumber)
+      return false;
     // only update if the grid changes are related to this cell
     // i.e. if the target cell that changed is part of this cell's row, col, or square
     return doesCellHaveDuplicates({ grid, col, row });
-  }, [row, col, grid, isErrorDetectorActive]);
+  }, [
+    row,
+    col,
+    grid,
+    isErrorDetectorActive,
+    storeSelectedCellNumber,
+    cell.number,
+  ]);
 
   const isHighlightedInSquare = currentCellSquareNumber === selectedCell.square;
 
@@ -55,23 +78,12 @@ const Cell = ({ cell, col, row }: Props) => {
     selectedCell.col === col && selectedCell.row === row;
 
   /**
-   * Returns The number value of the selected cell in the store
-   * @returns the number of the selected cell, or null if no cell is selected
-   */
-  const storeSelectedCellNumber = () => {
-    const row = selectedCell.row;
-    const col = selectedCell.col;
-    if (row === null || col === null) return null;
-    return grid[row][col].number;
-  };
-
-  /**
    * Whether the Number value of this cell instance is the same as the one selected in the store
    */
   const isCurrentCellNumberSameAsSelected =
     cell.number === null
       ? false
-      : storeSelectedCellNumber() === cell.number
+      : storeSelectedCellNumber === cell.number
       ? true
       : false;
 
@@ -88,17 +100,25 @@ const Cell = ({ cell, col, row }: Props) => {
   const cellPossibilities = useMemo(() => {
     if (cell.number === null) {
       if (isAutoNotes) {
+        // TODO : ACCESS REDUX FROM OUTSIDE THE COMPONENT TO MINIMIZE MEMO DEPENDENCIES, ESPECIALLY THE GRID ONE
         return getCellPossibilities(grid, { row, col });
         // return possiblities
-      }
-    } else return null;
-  }, [cell.number, grid, isAutoNotes, row, col]);
+      } else {
+        const notes: number[] = userCellNotes.filter((n) => n > 0);
 
-  const displayPossibilites = useMemo(() => {
+        return notes.length > 0 ? notes : null;
+      }
+    }
+    return null;
+  }, [cell.number, grid, isAutoNotes, row, col, userCellNotes]);
+
+  /**
+   * Displays the cell notes, either automatically if the autoNotes is active
+   */
+  const cellNotes = useMemo(() => {
     const possibilites = cellPossibilities;
     if (possibilites && possibilites.length > 0) {
       const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-
       return numbers.map((n) => {
         const show = possibilites.indexOf(n) !== -1;
         return (
@@ -111,6 +131,20 @@ const Cell = ({ cell, col, row }: Props) => {
       return null;
     }
   }, [cellPossibilities]);
+
+  // handles user note number removal when a number is added to related col/row/square
+  useEffect(() => {
+    if (storeSelectedCellNumber === null) return;
+    // if the cell is highlighted (i.e. all the related cells to the current one) and the grid was changed
+    if (isHighlighted && !isCurrentlySelected) {
+      // the number to remove is the one added to the currently selected cell
+
+      dispatch(
+        removeCellNoteNumber({ number: storeSelectedCellNumber, row, col })
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [grid]);
 
   /**
    * Sets the selected cell coordinates in the store
@@ -189,13 +223,13 @@ const Cell = ({ cell, col, row }: Props) => {
         .trim()}
       onClick={handleOnClick}
       onAuxClick={handleOnMiddleMouseClick}
-      // onBlur={handleOnBlur}
+      tabIndex={0}
     >
       <span>{cell.number}</span>
 
-      {isAutoNotes && cell.number === null && (
+      {cellNotes && cell.number === null && (
         <div className="possibilites grid grid-cols-3 grid-rows-3 justify-items-center items-center w-full h-full bg-transparent absolute left-0 top-0 right-0 bottom-0 text-darkGrey/70 text-sm font-thin">
-          {displayPossibilites}
+          {cellNotes}
         </div>
       )}
     </div>

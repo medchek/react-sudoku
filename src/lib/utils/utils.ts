@@ -170,6 +170,7 @@ export const pruneSudokuGridCells = (
         number,
         immutableNumber: number,
         isProtected: true,
+        notes: [0, 0, 0, 0, 0, 0, 0, 0, 0],
       };
       // hide hints that are not in the hints array
       if (allowedHints.indexOf(loopIteration) === -1) {
@@ -289,4 +290,22 @@ export const doesCellHaveDuplicates = ({
   }
   // if all checks are done, the number is not duplicated in any cell
   return false;
+};
+
+// const removeNotesNumberFromRelated = ({ grid, row, col }: GridGetter) => {
+
+// };
+
+/**
+ * Creates an array containing notes placeholders for all the grid cells
+ */
+export const createNotesArray = (): number[][][] => {
+  const notes: number[][][] = [];
+  for (let row = 0; row < 9; row++) {
+    notes[row] = [];
+    for (let col = 0; col < 9; col++) {
+      notes[row][col] = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+    }
+  }
+  return notes;
 };
