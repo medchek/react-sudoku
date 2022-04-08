@@ -170,7 +170,6 @@ export const pruneSudokuGridCells = (
         number,
         immutableNumber: number,
         isProtected: true,
-        notes: [0, 0, 0, 0, 0, 0, 0, 0, 0],
       };
       // hide hints that are not in the hints array
       if (allowedHints.indexOf(loopIteration) === -1) {

@@ -25,7 +25,6 @@ export interface CellState {
   number: number | null;
   immutableNumber: number;
   isProtected: boolean;
-  notes: number[];
 }
 interface GridState {
   grid: CellState[][];
