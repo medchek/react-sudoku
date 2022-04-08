@@ -3,16 +3,12 @@ import { RootState } from "../store/store";
 import { useAppDispatch, useAppSelector } from "../store/storeHooks";
 import SwitchableOption from "./SwitchableOption";
 import {
-  toggleAutoNotes as toggleStoreAutoNotes,
   toggleErrorDetector as toggleStoreErrorDetector,
   toggleDisableUnusable as toggleStoreDisableUnusable,
 } from "../store/slices/gridSlice";
+import AutoNotesSwitch from "./AutoNotesSwitch";
 
 const GridSwitches = () => {
-  const isAutoNotesOn = useAppSelector(
-    (state: RootState) => state.grid.autoNotes
-  );
-
   const isErrorDetectorOn = useAppSelector(
     (state: RootState) => state.grid.errorDetector
   );
@@ -21,10 +17,6 @@ const GridSwitches = () => {
   );
 
   const dispatch = useAppDispatch();
-
-  const toggleAutoNotes = () => {
-    dispatch(toggleStoreAutoNotes());
-  };
 
   const toggleErrorDetector = () => {
     dispatch(toggleStoreErrorDetector());
@@ -35,11 +27,7 @@ const GridSwitches = () => {
 
   return (
     <section id="helpers" className="space-y-2 w-60">
-      <SwitchableOption
-        text="Auto Notes"
-        isOn={isAutoNotesOn}
-        onClick={toggleAutoNotes}
-      />
+      <AutoNotesSwitch />
       <SwitchableOption
         text="Errors Detector"
         isOn={isErrorDetectorOn}
