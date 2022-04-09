@@ -68,17 +68,21 @@ export const gridSlice = createSlice({
   name: "grid",
   initialState,
   reducers: {
-    setCellNumber(state, action: PayloadAction<number>) {
+    setCellNumber(
+      state,
+      action: PayloadAction<{ number: number; isShift?: boolean }>
+    ) {
       const { row, col } = state.selectedCell;
 
       if (row === null || col === null) return;
 
       const cell = state.grid[row][col];
 
-      const number = action.payload;
+      const { number, isShift } = action.payload;
+
       if (number < 1 || number > 9) return;
       if (!cell.isProtected) {
-        if (!state.noteMode) {
+        if (!state.noteMode && !isShift) {
           // if note mode is not active, set the cell number instead of the notes
           if (cell.number !== number) {
             state.grid[row][col].number = number;

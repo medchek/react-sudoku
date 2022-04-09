@@ -17,7 +17,6 @@ const Paused = lazy(() => import("./Paused"));
 
 const Grid = () => {
   const isPaused = useAppSelector((state: RootState) => state.timer.isPaused);
-  const isNoteMode = useAppSelector((state: RootState) => state.grid.noteMode);
 
   const sudokuStoreGrid = useAppSelector((state: RootState) => state.grid.grid);
   const dispatch = useAppDispatch();
@@ -30,6 +29,8 @@ const Grid = () => {
       // console.log(`handling keydown ${e.key} - ${e.code}`);
 
       // console.log("modifier?", e.getModifierState("Shift"));
+
+      const isShift = e.getModifierState("Shift");
 
       const key = e.code;
       switch (key) {
@@ -48,39 +49,39 @@ const Grid = () => {
         // numbers handling
         case "Numpad1":
         case "Digit1":
-          dispatch(setCellNumber(1));
+          dispatch(setCellNumber({ number: 1, isShift }));
           break;
         case "Numpad2":
         case "Digit2":
-          dispatch(setCellNumber(2));
+          dispatch(setCellNumber({ number: 2, isShift }));
           break;
         case "Numpad3":
         case "Digit3":
-          dispatch(setCellNumber(3));
+          dispatch(setCellNumber({ number: 3, isShift }));
           break;
         case "Numpad4":
         case "Digit4":
-          dispatch(setCellNumber(4));
+          dispatch(setCellNumber({ number: 4, isShift }));
           break;
         case "Numpad5":
         case "Digit5":
-          dispatch(setCellNumber(5));
+          dispatch(setCellNumber({ number: 5, isShift }));
           break;
         case "Numpad6":
         case "Digit6":
-          dispatch(setCellNumber(6));
+          dispatch(setCellNumber({ number: 6, isShift }));
           break;
         case "Numpad7":
         case "Digit7":
-          dispatch(setCellNumber(7));
+          dispatch(setCellNumber({ number: 7, isShift }));
           break;
         case "Numpad8":
         case "Digit8":
-          dispatch(setCellNumber(8));
+          dispatch(setCellNumber({ number: 8, isShift }));
           break;
         case "Numpad9":
         case "Digit9":
-          dispatch(setCellNumber(9));
+          dispatch(setCellNumber({ number: 9, isShift }));
           break;
         case "Delete":
         case "Numpad0":
@@ -113,7 +114,7 @@ const Grid = () => {
     <div
       id="grid"
       tabIndex={-1}
-      className="absolute flex flex-col items-center justify-center outline-none w-[630px] h-[630px]"
+      className="relative flex flex-col items-center justify-center outline-none w-screen h-[100vw] sm:w-[550px] sm:h-[550px] lg:w-[600px] lg:h-[600px] xl:w-[630px] xl:h-[630px] py-4"
     >
       {displayGrid}
       <Suspense
