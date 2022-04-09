@@ -50,7 +50,7 @@ const ToggleButton = ({ text, disabled }: Props) => {
           isNoteMode
             ? "bg-white text-primary ring-2 ring-primary/70"
             : "text-[#9C9C9C] hover:ring-2"
-        } font-bold text-sm hover:ring-primary/70 transition-colors`}
+        } font-bold text-xs sm:text-sm hover:ring-primary/70 transition-colors`}
         customColors
         disable={disabled}
         onClick={handleOnClick}
@@ -58,7 +58,7 @@ const ToggleButton = ({ text, disabled }: Props) => {
         {text}
         {isNoteMode && (
           <span
-            className={`absolute w-5 h-5 bg-primary rounded-full shadow-md -top-2 -right-2 ${styles["animate-scale"]}`}
+            className={`absolute h-4 w-4 sm:w-5 sm:h-5 bg-primary rounded-full shadow-md -top-2 -right-2 ${styles["animate-scale"]}`}
           ></span>
         )}
       </BaseButton>

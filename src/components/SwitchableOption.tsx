@@ -13,9 +13,9 @@ const SwitchableOption = ({ text, isOn, onClick }: Props) => {
   const isPaused = useAppSelector((state: RootState) => state.timer.isPaused);
 
   return (
-    <div className="flex items-center space-x-5">
+    <div className="flex items-center space-x-2 lg:space-x-5">
       <Switch isOn={isOn} onClick={onClick} disabled={isPaused} />{" "}
-      <p className="text-darkGrey text-lg">{text}</p>
+      <p className="text-darkGrey xl:text-lg">{text}</p>
     </div>
   );
 };

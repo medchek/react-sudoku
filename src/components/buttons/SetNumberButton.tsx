@@ -11,7 +11,7 @@ const SetNumberButton = ({ children, onClick, disabled }: Props) => {
   return (
     <BaseButton
       onClick={onClick}
-      className="bg-white font-semibold text-2xl text-darkGrey  transition-all hover:ring-2 ring-primary/70 active:text-primary/70"
+      className="bg-white font-semibold text-xl md:text-2xl text-darkGrey  transition-all hover:ring-2 ring-primary/70 active:text-primary/70"
       disable={disabled}
     >
       {children}

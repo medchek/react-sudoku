@@ -10,7 +10,7 @@ interface Props {
 const Row = ({ row, rowIndex }: Props) => {
   return (
     // <div className="flex hover:bg-slate-50">
-    <div className="flex">
+    <div className="flex w-full grow">
       {row.map((cell, colIndex) => (
         <Cell
           row={rowIndex}

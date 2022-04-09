@@ -176,10 +176,10 @@ const Cell = ({ cell, col, row }: Props) => {
     <div
       className={[
         // "flex items-center justify-center w-[84px] h-[84px] ",
-        "relative flex items-center justify-center w-[70px] h-[70px] text-[1.7rem] font-medium hover:shadow-inner outline-none cursor-pointer select-none ",
-        row === 0 ? "border-t-4 border-primaryLight" : "",
+        "relative flex items-center justify-center xl:w-[70px] xl:h-[70px] text-xl md:text-2xl lg:text-[1.7rem] font-medium hover:shadow-inner outline-none cursor-pointer select-none basis-0 grow",
+        row === 0 ? "border-t-[3px] md:border-t-4 border-primaryLight" : "",
         row === 8 || row === 2 || row === 5
-          ? "border-b-4 border-primaryLight"
+          ? "border-b-[3px] md:border-b-4 border-primaryLight"
           : "",
         row === 0 ||
         row === 1 ||
@@ -189,7 +189,7 @@ const Cell = ({ cell, col, row }: Props) => {
         row === 7
           ? "border-b-2 border-b-lightGrey"
           : "",
-        col === 0 ? "border-l-4 border-primaryLight" : "",
+        col === 0 ? "border-l-[3px] md:border-l-4 border-primaryLight" : "",
         col === 0 ||
         col === 1 ||
         col === 3 ||
@@ -199,7 +199,7 @@ const Cell = ({ cell, col, row }: Props) => {
           ? "border-r-2 border-r-lightGrey"
           : "",
         col === 8 || col === 2 || col === 5
-          ? "border-r-4 border-primaryLight"
+          ? "border-r-[3px] md:border-r-4 border-primaryLight"
           : "",
         // `cell-row-${row} cell-col-${col} cell-sqr-${currentCellSquareNumber}`,
 
@@ -228,7 +228,7 @@ const Cell = ({ cell, col, row }: Props) => {
       <span>{cell.number}</span>
 
       {cellNotes && cell.number === null && (
-        <div className="possibilites grid grid-cols-3 grid-rows-3 justify-items-center items-center w-full h-full bg-transparent absolute left-0 top-0 right-0 bottom-0 text-darkGrey/70 text-sm font-thin">
+        <div className="possibilites grid grid-cols-3 grid-rows-3 justify-items-center items-center w-full h-full bg-transparent absolute left-0 top-0 right-0 bottom-0 text-darkGrey/70 text-[0.7rem] sm:text-xs md:text-sm sm:font-thin">
           {cellNotes}
         </div>
       )}

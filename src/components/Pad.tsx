@@ -13,7 +13,7 @@ const Pad = () => {
 
   const handleOnClick = (n: number) => {
     if (isPaused) return;
-    dispatch(setCellNumber(n));
+    dispatch(setCellNumber({ number: n }));
   };
 
   const numberButtons = [1, 2, 3, 4, 5, 6, 7, 8, 9].map((n, i) => (
@@ -27,12 +27,12 @@ const Pad = () => {
   ));
 
   return (
-    <section id="pad" className="flex space-x-3 ">
-      <div className="flex flex-col space-y-3">
+    <section id="pad" className="flex space-x-3 justify-center">
+      <div className="flex flex-col space-y-2 xl:space-y-3">
         <ToggleButton text="Note Mode" disabled={isPaused} />
         <HintButton disabled={isPaused} />
       </div>
-      <div className="grid grid-rows-2 grid-cols-5 gap-x-3 gap-y-3">
+      <div className="grid grid-rows-2 grid-cols-5 gap-x-2 gap-y-2 xl:gap-x-3 xl:gap-y-3 ">
         {numberButtons}
         <DeleteNumberButton disabled={isPaused} />
       </div>

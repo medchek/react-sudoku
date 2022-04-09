@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment, useState } from "react";
 import { RootState } from "../store/store";
 import { useAppDispatch, useAppSelector } from "../store/storeHooks";
 import SwitchableOption from "./SwitchableOption";
@@ -9,6 +9,10 @@ import {
 import AutoNotesSwitch from "./AutoNotesSwitch";
 
 const GridSwitches = () => {
+  const [isShown, setIsShown] = useState(false);
+
+  const isPaused = useAppSelector((state: RootState) => state.timer.isPaused);
+
   const isErrorDetectorOn = useAppSelector(
     (state: RootState) => state.grid.errorDetector
   );
@@ -26,19 +30,34 @@ const GridSwitches = () => {
   };
 
   return (
-    <section id="helpers" className="space-y-2 w-60">
-      <AutoNotesSwitch />
-      <SwitchableOption
-        text="Errors Detector"
-        isOn={isErrorDetectorOn}
-        onClick={toggleErrorDetector}
-      />
-      <SwitchableOption
-        text="Disable unusable"
-        isOn={isDisableUnusableOn}
-        onClick={toggleDisableUnusable}
-      />
-    </section>
+    <Fragment>
+      <section
+        id="helpers"
+        className={`${
+          isShown ? "block" : "hidden md:block"
+        }   absolute md:relative right-0 left-0 bottom-0 top-0 h-full py-4 md:py-0  flex flex-col space-y-2 w-full md:w-40 xl:w-60 z-10 bg-white`}
+      >
+        <AutoNotesSwitch />
+        <SwitchableOption
+          text="Errors Detector"
+          isOn={isErrorDetectorOn}
+          onClick={toggleErrorDetector}
+        />
+        <SwitchableOption
+          text="Disable unusable"
+          isOn={isDisableUnusableOn}
+          onClick={toggleDisableUnusable}
+        />
+      </section>
+      <button
+        type="button"
+        onClick={() => setIsShown(!isShown)}
+        disabled={isPaused}
+        className="relative md:hidden h-9 text-sm bg-zinc-100 active:bg-primaryLight text-zinc-500/80 rounded-md font-medium z-50 disabled:cursor-not-allowed disabled:text-zinc-300 disabled:bg-zinc-50"
+      >
+        More
+      </button>
+    </Fragment>
   );
 };
 

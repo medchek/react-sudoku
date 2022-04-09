@@ -47,10 +47,10 @@ const Modal = ({
         <div
           id="modal-overlay"
           onClick={handleOnClickOutside}
-          className="absolute top-0 w-full h-full bg-slate-800/50"
+          className="absolute top-0 w-full h-full bg-slate-800/50 z-[100]"
         ></div>
 
-        <div className="w-1/3 min-h-[5rem] bg-white rounded-lg shadow-xl text-darkGrey flex flex-col justify-between px-4 pt-2 absolute z-[100]">
+        <div className="w-11/12 md:w-4/6 lg:w-1/2 2xl:w-1/3 min-h-[5rem] bg-white rounded-lg shadow-xl text-darkGrey flex flex-col justify-between px-4 pt-2 absolute z-[100]">
           {title && title.length > 0 && (
             <p className="text-xl font-semibold">{title}</p>
           )}
