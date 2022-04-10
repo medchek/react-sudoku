@@ -1,13 +1,12 @@
 import {
-  pruneSudokuGridCells,
   getSquareNumber,
   createNotesArray,
+  generateGrid,
 } from "./../../lib/utils/utils";
 import { HorizontalDirections } from "./../../lib/enums/directions";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { VerticalDirections } from "../../lib/enums/directions";
 import { Difficulty } from "../../lib/enums/difficulties";
-
 export interface CellCoordinates {
   row: number;
   col: number;
@@ -18,8 +17,6 @@ export interface NullableCellCoordinates {
   col: number | null;
   square: number | null;
 }
-
-type Notes = { [noteNumber: string]: boolean };
 
 export interface CellState {
   number: number | null;
@@ -34,21 +31,22 @@ interface GridState {
   notes: number[][][];
   errorDetector: boolean;
   disableUnusable: boolean;
+  difficulty: Difficulty | null;
 }
 
-const grid: number[][] = [
-  [5, 9, 8, 6, 2, 3, 1, 4, 7],
-  [7, 4, 3, 1, 5, 8, 2, 9, 6],
-  [2, 6, 1, 4, 7, 9, 3, 5, 8],
-  [8, 1, 7, 5, 4, 2, 9, 6, 3],
-  [9, 3, 4, 8, 6, 7, 5, 1, 2],
-  [6, 2, 5, 3, 9, 1, 7, 8, 4],
-  [1, 8, 9, 7, 3, 4, 6, 2, 5],
-  [3, 5, 2, 9, 8, 6, 4, 7, 1],
-  [4, 7, 6, 2, 1, 5, 8, 3, 9],
-];
+// const grid: number[][] = [
+//   [5, 9, 8, 6, 2, 3, 1, 4, 7],
+//   [7, 4, 3, 1, 5, 8, 2, 9, 6],
+//   [2, 6, 1, 4, 7, 9, 3, 5, 8],
+//   [8, 1, 7, 5, 4, 2, 9, 6, 3],
+//   [9, 3, 4, 8, 6, 7, 5, 1, 2],
+//   [6, 2, 5, 3, 9, 1, 7, 8, 4],
+//   [1, 8, 9, 7, 3, 4, 6, 2, 5],
+//   [3, 5, 2, 9, 8, 6, 4, 7, 1],
+//   [4, 7, 6, 2, 1, 5, 8, 3, 9],
+// ];
 
-const prunedGrid = pruneSudokuGridCells(grid, Difficulty.Easy);
+const prunedGrid = generateGrid(Difficulty.Easy);
 
 const initialState: GridState = {
   grid: prunedGrid,
@@ -60,8 +58,9 @@ const initialState: GridState = {
   autoNotes: false,
   noteMode: false,
   notes: createNotesArray(),
-  errorDetector: true,
+  errorDetector: false,
   disableUnusable: false,
+  difficulty: null,
 };
 
 export const gridSlice = createSlice({
@@ -86,11 +85,10 @@ export const gridSlice = createSlice({
           // if note mode is not active, set the cell number instead of the notes
           if (cell.number !== number) {
             state.grid[row][col].number = number;
-            // check if the number needs to be removed from the notes related to the target cell
-            if (!state.autoNotes) {
-            }
           }
         } else {
+          // only run this if the cell number is null
+          if (cell.number !== null) return;
           const noteIndex = number - 1;
           // set notes otherwise
           const noteNumber = state.notes[row][col][noteIndex];
@@ -104,7 +102,6 @@ export const gridSlice = createSlice({
 
       if (row === null || col === null) return;
       const cell = state.grid[row][col];
-      console.log("restting");
       // reset the cell notes as well
       state.notes[row][col] = [0, 0, 0, 0, 0, 0, 0, 0, 0];
 
@@ -218,6 +215,17 @@ export const gridSlice = createSlice({
       state.grid[row][col].number = cellData.immutableNumber;
       state.grid[row][col].isProtected = true;
     },
+    setDifficulty(state, action: PayloadAction<Difficulty>) {
+      state.difficulty = action.payload;
+    },
+    startNewGame(state, action: PayloadAction<Difficulty>) {
+      const difficulty = action.payload;
+      state.difficulty = difficulty;
+      // generate a new grid
+      state.grid = generateGrid(difficulty);
+      // reset the notes array
+      state.notes = createNotesArray();
+    },
   },
 });
 
@@ -237,5 +245,6 @@ export const {
   toggleErrorDetector,
   toggleDisableUnusable,
   revealHint,
+  startNewGame,
 } = gridSlice.actions;
 export default gridSlice.reducer;

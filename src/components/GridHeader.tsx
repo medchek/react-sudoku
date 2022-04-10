@@ -1,0 +1,93 @@
+import React, { Fragment, lazy, Suspense, useState } from "react";
+import { Difficulty } from "../lib/enums/difficulties";
+import { useAppDispatch, useAppSelector } from "../store/storeHooks";
+
+import { startNewGame } from "../store/slices/gridSlice";
+import { RootState } from "../store/store";
+
+const Modal = lazy(() => import("./Modal"));
+
+const GridHeader = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const dispatch = useAppDispatch();
+  const currentDifficulty = useAppSelector(
+    (state: RootState) => state.grid.difficulty
+  );
+
+  const handleStartNewGame = (difficulty: Difficulty) => {
+    dispatch(startNewGame(difficulty));
+    setIsModalOpen(false);
+  };
+
+  const displayDifficultyName = (): string => {
+    switch (currentDifficulty) {
+      case Difficulty.Easy:
+        return "Easy";
+      case Difficulty.Medium:
+        return "Medium";
+      case Difficulty.Hard:
+        return "Hard";
+      case Difficulty.Insane:
+        return "Insane";
+      default:
+        return "Not set";
+    }
+  };
+
+  const DifficultyButton = (text: string, difficulty: Difficulty) => {
+    return (
+      <button
+        className="w-full h-10 bg-primary hover:bg-primary/70 focus:ring-4 focus:ring-primaryLight text-white rounded-lg font-semibold active:scale-[1.03] transition-all"
+        onClick={() => handleStartNewGame(difficulty)}
+      >
+        {text}
+      </button>
+    );
+  };
+
+  return (
+    <Fragment>
+      <div className="flex items-center justify-between h-10 w-full text-zinc-400 py-2 text-sm">
+        <p>
+          Difficulty:{" "}
+          <span className="text-zinc-600 font-medium">
+            {displayDifficultyName()}
+          </span>
+        </p>
+
+        <button
+          type="button"
+          className="bg-zinc-100  px-2 py-1 rounded hover:bg-primary hover:text-white transition-colors focus:ring-2 focus:ring-primaryLight"
+          title="Start a new game"
+          onClick={() => setIsModalOpen(true)}
+        >
+          New Game
+        </button>
+      </div>
+
+      <Suspense fallback="Loading...">
+        {isModalOpen && (
+          <Modal
+            closeOnClickOutside
+            noButtons
+            closeModal={() => setIsModalOpen(false)}
+            customSize
+            className="w-80 h-auto text-center py-4"
+          >
+            <div id="difficulty-selector" className="space-y-4">
+              <h1 className="font-semibold text-xl text-darkGrey">New Game</h1>
+              <section className="flex flex-col items-center px-4 space-y-3 pb-2">
+                {DifficultyButton("Easy", Difficulty.Easy)}
+                {DifficultyButton("Medium", Difficulty.Medium)}
+                {DifficultyButton("Hard", Difficulty.Hard)}
+                {DifficultyButton("Insane", Difficulty.Insane)}
+              </section>
+            </div>
+          </Modal>
+        )}
+      </Suspense>
+    </Fragment>
+  );
+};
+
+export default GridHeader;

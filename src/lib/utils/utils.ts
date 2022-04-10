@@ -1,3 +1,4 @@
+import { Sudoku } from "../core/Sudoku";
 import type { CellState } from "./../../store/slices/gridSlice";
 import { Difficulty } from "./../enums/difficulties";
 
@@ -130,7 +131,7 @@ const generateHintsPositions = (difficulty: Difficulty) => {
   return shuffled;
 };
 
-export const pruneSudokuGrid = (
+const pruneSudokuGrid = (
   grid: number[][],
   difficulty: Difficulty
 ): (number | null)[][] => {
@@ -157,7 +158,7 @@ export const pruneSudokuGrid = (
  * @param grid a 2d array containing the grid numbers
  * @param difficulty the difficulty level. The higher it is the less hints are left in the grid
  */
-export const pruneSudokuGridCells = (
+const pruneSudokuGridCells = (
   grid: number[][],
   difficulty: Difficulty
 ): CellState[][] => {
@@ -186,6 +187,16 @@ export const pruneSudokuGridCells = (
   );
 
   return clonedGrid;
+};
+
+/**
+ * Generates a Sudoku grid compatible with the redux store
+ * @param difficulty the game difficulty which will affect the number of hints
+ */
+export const generateGrid = (difficulty: Difficulty): CellState[][] => {
+  const sudoku = new Sudoku();
+
+  return pruneSudokuGridCells(sudoku.generate(), difficulty);
 };
 
 /**
