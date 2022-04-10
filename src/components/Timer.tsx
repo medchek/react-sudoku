@@ -1,6 +1,11 @@
 import { mdiPause, mdiPlay } from "@mdi/js";
-import React, { useEffect, useState } from "react";
-import { togglePauseTimer } from "../store/slices/timerSlice";
+import React, { useEffect } from "react";
+import {
+  togglePauseTimer,
+  setSeconds as setStoreSeconds,
+  setMinutes as setStoreMinutes,
+  setHours as setStoreHours,
+} from "../store/slices/timerSlice";
 import { RootState } from "../store/store";
 import { useAppDispatch, useAppSelector } from "../store/storeHooks";
 import Icon from "./Icon";
@@ -11,9 +16,15 @@ const Timer = () => {
   const isPaused = useAppSelector((state: RootState) => state.timer.isPaused);
   const dispatch = useAppDispatch();
 
-  const [seconds, setSeconds] = useState(0);
-  const [minutes, setMinutes] = useState(0);
-  const [hours, setHours] = useState(0);
+  const seconds = useAppSelector((state: RootState) => state.timer.seconds);
+  const minutes = useAppSelector((state: RootState) => state.timer.minutes);
+  const hours = useAppSelector((state: RootState) => state.timer.hours);
+
+  const setSeconds = (n: number) => dispatch(setStoreSeconds(n));
+
+  const setMinutes = (n: number) => dispatch(setStoreMinutes(n));
+
+  const setHours = (n: number) => dispatch(setStoreHours(n));
 
   const handleOnClick = () => {
     dispatch(togglePauseTimer());
