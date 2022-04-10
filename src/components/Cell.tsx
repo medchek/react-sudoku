@@ -40,8 +40,10 @@ const Cell = ({ cell, col, row }: Props) => {
     (state: RootState) => state.grid.errorDetector
   );
 
+  const isGamePause = useAppSelector(
+    (state: RootState) => state.timer.isPaused
+  );
   const dispatch = useAppDispatch();
-
   /** The square number  of the local cell (i.e. this instance the the component)*/
   const currentCellSquareNumber = getSquareNumber({ row, col });
   /**
@@ -57,19 +59,11 @@ const Cell = ({ cell, col, row }: Props) => {
 
   // track row/col/squares duplicates in the current cell
   const cellHasDuplicates = useMemo(() => {
-    if (!isErrorDetectorActive && cell.number !== storeSelectedCellNumber)
-      return false;
+    // if (cell.number !== storeSelectedCellNumber) return false;
     // only update if the grid changes are related to this cell
     // i.e. if the target cell that changed is part of this cell's row, col, or square
     return doesCellHaveDuplicates({ grid, col, row });
-  }, [
-    row,
-    col,
-    grid,
-    isErrorDetectorActive,
-    storeSelectedCellNumber,
-    cell.number,
-  ]);
+  }, [row, col, grid /* storeSelectedCellNumber,  cell.number */]);
 
   const isHighlightedInSquare = currentCellSquareNumber === selectedCell.square;
 
@@ -176,7 +170,7 @@ const Cell = ({ cell, col, row }: Props) => {
     <div
       className={[
         // "flex items-center justify-center w-[84px] h-[84px] ",
-        "relative flex items-center justify-center xl:w-[70px] xl:h-[70px] text-xl md:text-2xl lg:text-[1.7rem] font-medium hover:shadow-inner outline-none cursor-pointer select-none basis-0 grow",
+        "relative flex items-center justify-center xl:w-[70px] xl:h-[70px] text-xl sm:text-2xl lg:text-[1.7rem] font-medium hover:shadow-inner outline-none cursor-pointer select-none basis-0 grow",
         row === 0 ? "border-t-[3px] md:border-t-4 border-primaryLight" : "",
         row === 8 || row === 2 || row === 5
           ? "border-b-[3px] md:border-b-4 border-primaryLight"
@@ -225,7 +219,7 @@ const Cell = ({ cell, col, row }: Props) => {
       onAuxClick={handleOnMiddleMouseClick}
       tabIndex={0}
     >
-      <span>{cell.number}</span>
+      <span>{!isGamePause && cell.number}</span>
 
       {cellNotes && cell.number === null && (
         <div className="possibilites grid grid-cols-3 grid-rows-3 justify-items-center items-center w-full h-full bg-transparent absolute left-0 top-0 right-0 bottom-0 text-darkGrey/70 text-[0.7rem] sm:text-xs md:text-sm sm:font-thin">
