@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from "../store/storeHooks";
 import { startNewGame } from "../store/slices/gridSlice";
 import { RootState } from "../store/store";
 
-const Modal = lazy(() => import("./Modal"));
+const Modal = lazy(() => import("./Modal/Modal"));
 
 const GridHeader = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);

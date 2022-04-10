@@ -7,7 +7,7 @@ import {
 } from "../store/slices/gridSlice";
 import { useAppDispatch, useAppSelector } from "../store/storeHooks";
 import { RootState } from "../store/store";
-import Modal from "./Modal";
+import Modal from "./Modal/Modal";
 type Props = {};
 
 const AutoNotesSwitch = (props: Props) => {
