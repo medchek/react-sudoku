@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from "../store/storeHooks";
 
 import { startNewGame } from "../store/slices/gridSlice";
 import { RootState } from "../store/store";
+import { resetTimer } from "../store/slices/timerSlice";
 
 const Modal = lazy(() => import("./Modal/Modal"));
 
@@ -16,6 +17,7 @@ const GridHeader = () => {
 
   const handleStartNewGame = (difficulty: Difficulty) => {
     dispatch(startNewGame(difficulty));
+    dispatch(resetTimer());
     setIsModalOpen(false);
   };
 
