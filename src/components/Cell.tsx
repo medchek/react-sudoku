@@ -40,6 +40,17 @@ const Cell = ({ cell, col, row }: Props) => {
     (state: RootState) => state.grid.errorDetector
   );
 
+  const isCellNumberWrong: boolean = useMemo(() => {
+    if (
+      isErrorDetectorActive &&
+      cell.number !== null &&
+      cell.number !== cell.immutableNumber
+    ) {
+      return true;
+    }
+    return false;
+  }, [cell.number, isErrorDetectorActive, cell.immutableNumber]);
+
   const isGamePause = useAppSelector(
     (state: RootState) => state.timer.isPaused
   );
@@ -197,6 +208,8 @@ const Cell = ({ cell, col, row }: Props) => {
           : "",
         // `cell-row-${row} cell-col-${col} cell-sqr-${currentCellSquareNumber}`,
 
+        // BACK GROUND COLOR
+
         // whether the current cell is the one selected
         // cell.isError
         cellHasDuplicates
@@ -211,7 +224,11 @@ const Cell = ({ cell, col, row }: Props) => {
           isHighlighted
           ? "bg-slate-100/80"
           : "",
-        cell.isProtected ? "text-darkGrey/90" : "text-primary",
+        cell.isProtected
+          ? "text-darkGrey/90"
+          : isCellNumberWrong
+          ? "!text-red-500"
+          : "text-primary",
       ]
         .join(" ")
         .trim()}
