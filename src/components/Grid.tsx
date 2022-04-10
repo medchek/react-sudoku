@@ -7,10 +7,15 @@ import {
   moveSelectedCol,
   moveSelectedRow,
   resetCellNumber,
+  revealHint,
   setCellNumber,
+  toggleAutoNotes,
+  toggleNoteMode,
 } from "../store/slices/gridSlice";
+import { togglePauseTimer } from "../store/slices/timerSlice";
 import { RootState } from "../store/store";
 import { useAppDispatch, useAppSelector } from "../store/storeHooks";
+import GridHeader from "./GridHeader";
 import Row from "./Row";
 
 const Paused = lazy(() => import("./Paused"));
@@ -89,6 +94,19 @@ const Grid = () => {
         case "Digit0":
           dispatch(resetCellNumber());
           break;
+        case "KeyP":
+          dispatch(togglePauseTimer());
+          break;
+        case "KeyN":
+          dispatch(toggleNoteMode());
+          break;
+        case "KeyH":
+          dispatch(revealHint());
+          break;
+        case "KeyA":
+        case "KeyQ":
+          dispatch(toggleAutoNotes());
+          break;
 
         default:
           return;
@@ -114,18 +132,21 @@ const Grid = () => {
     <div
       id="grid"
       tabIndex={-1}
-      className="relative flex flex-col items-center justify-center outline-none w-screen h-[100vw] sm:w-[550px] sm:h-[550px] lg:w-[600px] lg:h-[600px] xl:w-[630px] xl:h-[630px] py-4"
+      className="relative flex flex-col items-center justify-center outline-none w-screen sm:w-[550px] lg:w-[600px] xl:w-[630px] h-full px-4 grow"
     >
-      {displayGrid}
-      <Suspense
-        fallback={
-          <div className="flex flex-col items-center justify-center absolute top-0 w-full h-full bg-white">
-            Loading...
-          </div>
-        }
-      >
-        {isPaused && <Paused />}
-      </Suspense>
+      <GridHeader />
+      <div className="relative flex flex-col items-center justify-center w-full h-[100vw] sm:h-[550px] lg:h-[600px] xl:h-[630px]  sm:px-0">
+        {displayGrid}
+        <Suspense
+          fallback={
+            <div className="flex flex-col items-center justify-center absolute top-0 w-full h-full bg-white">
+              Loading...
+            </div>
+          }
+        >
+          {isPaused && <Paused />}
+        </Suspense>
+      </div>
     </div>
   );
 };
