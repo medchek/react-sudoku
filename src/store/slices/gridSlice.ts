@@ -46,10 +46,8 @@ interface GridState {
 //   [4, 7, 6, 2, 1, 5, 8, 3, 9],
 // ];
 
-const prunedGrid = generateGrid(Difficulty.Easy);
-
 const initialState: GridState = {
-  grid: prunedGrid,
+  grid: [],
   selectedCell: {
     row: null,
     col: null,

@@ -1,15 +1,20 @@
-import React, { Fragment, lazy, Suspense, useState } from "react";
+import React, { Fragment, lazy, Suspense, useEffect, useState } from "react";
 import { Difficulty } from "../lib/enums/difficulties";
 import { useAppDispatch, useAppSelector } from "../store/storeHooks";
 
 import { startNewGame } from "../store/slices/gridSlice";
 import { RootState } from "../store/store";
-import { resetTimer } from "../store/slices/timerSlice";
+import {
+  pauseTimer,
+  resetTimer,
+  unpauseTimer,
+} from "../store/slices/timerSlice";
 
 const Modal = lazy(() => import("./Modal/Modal"));
 
 const GridHeader = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+
   const dispatch = useAppDispatch();
   const currentDifficulty = useAppSelector(
     (state: RootState) => state.grid.difficulty
@@ -18,8 +23,15 @@ const GridHeader = () => {
   const handleStartNewGame = (difficulty: Difficulty) => {
     dispatch(startNewGame(difficulty));
     dispatch(resetTimer());
+    dispatch(unpauseTimer());
     setIsModalOpen(false);
   };
+  useEffect(() => {
+    if (currentDifficulty === null) {
+      dispatch(pauseTimer());
+      setIsModalOpen(true);
+    }
+  }, [currentDifficulty]);
 
   const displayDifficultyName = (): string => {
     switch (currentDifficulty) {
@@ -49,28 +61,30 @@ const GridHeader = () => {
 
   return (
     <Fragment>
-      <div className="flex items-center justify-between h-10 w-full text-zinc-400 py-2 text-sm">
-        <p>
-          Difficulty:{" "}
-          <span className="text-zinc-600 font-medium">
-            {displayDifficultyName()}
-          </span>
-        </p>
+      {currentDifficulty !== null && (
+        <div className="flex items-center justify-between h-10 w-full text-zinc-400 py-2 text-sm">
+          <p>
+            Difficulty:{" "}
+            <span className="text-zinc-600 font-medium">
+              {displayDifficultyName()}
+            </span>
+          </p>
 
-        <button
-          type="button"
-          className="bg-zinc-100  px-2 py-1 rounded hover:bg-primary hover:text-white transition-colors focus:ring-2 focus:ring-primaryLight"
-          title="Start a new game"
-          onClick={() => setIsModalOpen(true)}
-        >
-          New Game
-        </button>
-      </div>
+          <button
+            type="button"
+            className="bg-zinc-100  px-2 py-1 rounded hover:bg-primary hover:text-white transition-colors focus:ring-2 focus:ring-primaryLight"
+            title="Start a new game"
+            onClick={() => setIsModalOpen(true)}
+          >
+            New Game
+          </button>
+        </div>
+      )}
 
       <Suspense fallback="Loading...">
         {isModalOpen && (
           <Modal
-            closeOnClickOutside
+            closeOnClickOutside={currentDifficulty === null ? false : true}
             noButtons
             closeModal={() => setIsModalOpen(false)}
             customSize

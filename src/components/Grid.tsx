@@ -123,6 +123,7 @@ const Grid = () => {
   }, [dispatch, isPaused]);
 
   const displayGrid = useMemo(() => {
+    if (sudokuGrid.length === 0) return null;
     return sudokuGrid.map((row, rowIndex) => {
       return <Row row={row} rowIndex={rowIndex} key={`row-${rowIndex}`} />;
     });
