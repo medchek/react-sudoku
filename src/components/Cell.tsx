@@ -154,7 +154,7 @@ const Cell = ({ cell, col, row }: Props) => {
   /**
    * Sets the selected cell coordinates in the store
    */
-  const handleOnClick = (e: MouseEvent) => {
+  const handleOnClick = () => {
     dispatch(
       setSelectedCell({
         row,
@@ -166,7 +166,7 @@ const Cell = ({ cell, col, row }: Props) => {
   /**
    * Resets the selected cell coordinates in the store
    */
-  const handleOnMiddleMouseClick = (e: MouseEvent) => {
+  const handleOnMiddleMouseClick = () => {
     dispatch(
       setSelectedCell({
         row,
@@ -236,7 +236,10 @@ const Cell = ({ cell, col, row }: Props) => {
       onAuxClick={handleOnMiddleMouseClick}
       tabIndex={0}
     >
-      <span>{!isGamePause && cell.number}</span>
+      <span>
+        {/* if the cell number is null, insert invisible content to prevent cell squashing when an entier row is empty */}
+        {!isGamePause && (cell.number ?? <span className="invisible">0</span>)}
+      </span>
 
       {cellNotes && cell.number === null && (
         <div className="possibilites grid grid-cols-3 grid-rows-3 justify-items-center items-center w-full h-full bg-transparent absolute left-0 top-0 right-0 bottom-0 text-darkGrey/70 text-[0.7rem] sm:text-xs md:text-sm sm:font-thin">
