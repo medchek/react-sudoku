@@ -9,6 +9,9 @@ module.exports = {
         lightGrey: "#E3E3E3",
         buttonGrey: "#F9F9F9",
       },
+      scale: {
+        103: "1.03",
+      },
     },
   },
   plugins: [],
