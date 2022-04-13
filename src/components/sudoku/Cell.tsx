@@ -1,17 +1,17 @@
-import React, { useMemo, MouseEvent, useEffect } from "react";
+import React, { useMemo, useEffect } from "react";
 import {
   doesCellHaveDuplicates,
   getCellPossibilities,
   getSquareNumber,
-} from "../lib/utils/utils";
+} from "../../lib/utils/utils";
 import {
   CellState,
   removeCellNoteNumber,
   resetCellNumber,
   setSelectedCell,
-} from "../store/slices/gridSlice";
-import { RootState } from "../store/store";
-import { useAppDispatch, useAppSelector } from "../store/storeHooks";
+} from "../../store/slices/gridSlice";
+import { RootState } from "../../store/store";
+import { useAppDispatch, useAppSelector } from "../../store/storeHooks";
 
 interface Props {
   cell: CellState;

@@ -1,11 +1,11 @@
 import React, { Fragment, useState } from "react";
-import { RootState } from "../store/store";
-import { useAppDispatch, useAppSelector } from "../store/storeHooks";
+import { RootState } from "../../store/store";
+import { useAppDispatch, useAppSelector } from "../../store/storeHooks";
 import SwitchableOption from "./SwitchableOption";
 import {
   toggleErrorDetector as toggleStoreErrorDetector,
   toggleDisableUnusable as toggleStoreDisableUnusable,
-} from "../store/slices/gridSlice";
+} from "../../store/slices/gridSlice";
 import AutoNotesSwitch from "./AutoNotesSwitch";
 
 const GridSwitches = () => {
@@ -35,7 +35,7 @@ const GridSwitches = () => {
         id="helpers"
         className={`${
           isShown ? "block" : "hidden md:block"
-        }   absolute md:relative right-0 left-0 bottom-0 top-0 h-full py-4 md:py-0  flex flex-col space-y-2 w-full md:w-40 xl:w-60 z-10 bg-white`}
+        }   absolute md:relative right-0 left-0 bottom-0 top-0 h-full py-4 md:py-0  flex flex-col space-y-2 w-full md:w-40 xl:w-60 z-10 bg-white dark:bg-darkBg`}
       >
         <AutoNotesSwitch />
         <SwitchableOption

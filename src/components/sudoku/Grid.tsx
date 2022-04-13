@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, lazy, Suspense } from "react";
 import {
   HorizontalDirections,
   VerticalDirections,
-} from "../lib/enums/directions";
+} from "../../lib/enums/directions";
 import {
   moveSelectedCol,
   moveSelectedRow,
@@ -11,10 +11,10 @@ import {
   setCellNumber,
   toggleAutoNotes,
   toggleNoteMode,
-} from "../store/slices/gridSlice";
-import { togglePauseTimer } from "../store/slices/timerSlice";
-import { RootState } from "../store/store";
-import { useAppDispatch, useAppSelector } from "../store/storeHooks";
+} from "../../store/slices/gridSlice";
+import { togglePauseTimer } from "../../store/slices/timerSlice";
+import { RootState } from "../../store/store";
+import { useAppDispatch, useAppSelector } from "../../store/storeHooks";
 import GridHeader from "./GridHeader";
 import Row from "./Row";
 

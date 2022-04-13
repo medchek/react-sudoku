@@ -12,6 +12,7 @@ type Props = {
   noButtons?: boolean;
   customSize?: boolean;
   className?: string;
+  noEscape?: boolean;
 };
 
 const Modal = ({
@@ -23,6 +24,7 @@ const Modal = ({
   noButtons,
   customSize,
   className,
+  noEscape,
 }: Props) => {
   const modalRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
@@ -36,7 +38,7 @@ const Modal = ({
   };
 
   const handleOnKeyDown = (e: KeyboardEvent) => {
-    if (e.key === "Escape") {
+    if (e.key === "Escape" && !noEscape) {
       closeModal();
     }
   };
@@ -54,7 +56,7 @@ const Modal = ({
         <div
           id="modal-overlay"
           onClick={handleOnClickOutside}
-          className={`absolute top-0 w-full h-full bg-slate-800/50 z-[100] ${styles["animate-fade"]}`}
+          className={`absolute top-0 w-full h-full bg-slate-800/50 dark:bg-zinc-900/90 z-[100] ${styles["animate-fade"]}`}
         ></div>
 
         <div
@@ -64,10 +66,10 @@ const Modal = ({
               : className
           } ${
             styles["animate-scale"]
-          } bg-white rounded-lg shadow-xl text-darkGrey flex flex-col justify-between  absolute z-[100]`}
+          } bg-white dark:bg-zinc-800 rounded-lg shadow-xl text-darkGrey flex flex-col justify-between  absolute z-[100]`}
         >
           {title && title.length > 0 && (
-            <p className="text-xl font-semibold">{title}</p>
+            <p className="text-xl font-semibold dark:text-zinc-100">{title}</p>
           )}
           <div className={`grow ${!customSize ? "py-4" : ""}`}>{children}</div>
 

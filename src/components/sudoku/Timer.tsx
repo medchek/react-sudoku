@@ -14,24 +14,29 @@ const addZeroToSingleNumber = (n: number) => (n <= 9 ? `0${n}` : n);
 
 const Timer = () => {
   const isPaused = useAppSelector((state: RootState) => state.timer.isPaused);
+  const difficulty = useAppSelector(
+    (state: RootState) => state.grid.difficulty
+  );
   const dispatch = useAppDispatch();
 
   const seconds = useAppSelector((state: RootState) => state.timer.seconds);
   const minutes = useAppSelector((state: RootState) => state.timer.minutes);
   const hours = useAppSelector((state: RootState) => state.timer.hours);
 
-  const setSeconds = (n: number) => dispatch(setStoreSeconds(n));
-
-  const setMinutes = (n: number) => dispatch(setStoreMinutes(n));
-
-  const setHours = (n: number) => dispatch(setStoreHours(n));
-
   const handleOnClick = () => {
+    // if the game has not started yet, don't do anything
+    if (difficulty === null) return;
     dispatch(togglePauseTimer());
   };
 
   useEffect(() => {
     if (isPaused) return;
+
+    const setSeconds = (n: number) => dispatch(setStoreSeconds(n));
+
+    const setMinutes = (n: number) => dispatch(setStoreMinutes(n));
+
+    const setHours = (n: number) => dispatch(setStoreHours(n));
 
     const interval = setInterval(() => {
       // go to next minute
@@ -55,7 +60,7 @@ const Timer = () => {
     return () => {
       clearInterval(interval);
     };
-  }, [seconds, minutes, hours, isPaused]);
+  }, [seconds, minutes, hours, isPaused, dispatch]);
 
   return (
     <span className="space-x-2 flex items-center">
@@ -64,6 +69,7 @@ const Timer = () => {
         {addZeroToSingleNumber(minutes)}:{addZeroToSingleNumber(seconds)}
       </span>
       <button
+        disabled={difficulty === null}
         title={isPaused ? "Continue" : "Pause the game"}
         className="bg-slate-100 w-6 h-6 rounded-md flex items-center justify-center hover:bg-slate-200 active:bg-slate-200 outline-none active:ring-1 ring-primary/70"
         onClick={handleOnClick}

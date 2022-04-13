@@ -1,5 +1,5 @@
 import React from "react";
-import Icon from "../Icon";
+import Icon from "../common//Icon";
 import { mdiCloseBoxOutline } from "@mdi/js";
 import BaseButton from "./BaseButton";
 import { useAppDispatch } from "../../store/storeHooks";

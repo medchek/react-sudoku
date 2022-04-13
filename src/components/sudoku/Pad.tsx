@@ -10,6 +10,9 @@ import { RootState } from "../store/store";
 const Pad = () => {
   const dispatch = useAppDispatch();
   const isPaused = useAppSelector((state: RootState) => state.timer.isPaused);
+  // const isDisableUnusable = useAppSelector(
+  //   (state: RootState) => state.grid.disableUnusable
+  // );
 
   const handleOnClick = (n: number) => {
     if (isPaused) return;

@@ -1,16 +1,16 @@
 import React, { Fragment, lazy, Suspense, useEffect, useState } from "react";
-import { Difficulty } from "../lib/enums/difficulties";
-import { useAppDispatch, useAppSelector } from "../store/storeHooks";
+import { Difficulty } from "../../lib/enums/difficulties";
+import { useAppDispatch, useAppSelector } from "../../store/storeHooks";
 
-import { startNewGame } from "../store/slices/gridSlice";
-import { RootState } from "../store/store";
+import { startNewGame } from "../../store/slices/gridSlice";
+import { RootState } from "../../store/store";
 import {
   pauseTimer,
   resetTimer,
   unpauseTimer,
-} from "../store/slices/timerSlice";
+} from "../../store/slices/timerSlice";
 
-const Modal = lazy(() => import("./Modal/Modal"));
+const Modal = lazy(() => import("../common/Modal/Modal"));
 
 const GridHeader = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -64,7 +64,7 @@ const GridHeader = () => {
       {currentDifficulty !== null && (
         <div className="flex items-center justify-between h-10 w-full text-zinc-400 py-2 text-sm">
           <p>
-            Difficulty:{" "}
+            Difficulty:
             <span className="text-zinc-600 font-medium">
               {displayDifficultyName()}
             </span>
@@ -84,6 +84,7 @@ const GridHeader = () => {
       <Suspense fallback="Loading...">
         {isModalOpen && (
           <Modal
+            noEscape
             closeOnClickOutside={currentDifficulty === null ? false : true}
             noButtons
             closeModal={() => setIsModalOpen(false)}
@@ -91,7 +92,9 @@ const GridHeader = () => {
             className="w-80 h-auto text-center py-4"
           >
             <div id="difficulty-selector" className="space-y-4">
-              <h1 className="font-semibold text-xl text-darkGrey">New Game</h1>
+              <h1 className="font-semibold text-xl text-darkGrey dark:text-zinc-100">
+                New Game
+              </h1>
               <section className="flex flex-col items-center px-4 space-y-3 pb-2">
                 {DifficultyButton("Easy", Difficulty.Easy)}
                 {DifficultyButton("Medium", Difficulty.Medium)}
