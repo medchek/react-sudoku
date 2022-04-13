@@ -1,0 +1,13 @@
+.first-rect {
+  clip-path: polygon(60% 0, 100% 0, 100% 100%, 0% 100%);
+}
+.second-rect {
+  clip-path: polygon(50% 0, 100% 0, 100% 100%, 0% 100%);
+}
+.third-rect {
+  clip-path: polygon(40% 0, 100% 0, 100% 100%, 0% 100%);
+}
+
+.hero-bottom-react {
+  clip-path: polygon(100% 0, 0 0, 100% 100%);
+}
