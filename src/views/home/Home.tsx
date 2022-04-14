@@ -1,20 +1,25 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Feature from "../components/home//Feature";
-import HeaderLogo from "../components/common/HeaderLogo";
-import Hero from "../components/home/Hero/Hero";
-import Rule from "../components/home/Rule";
-import FirstFeature from "../components/svgs/FirstFeature";
-import LeftSquare from "../components/svgs/LeftSquare";
-import RightSquare from "../components/svgs/RightSquare";
-import SecondFeature from "../components/svgs/SecondFeature";
-import ThirdFeature from "../components/svgs/ThirdFeature";
+import Feature from "../../components/home/Feature";
+import HeaderLogo from "../../components/common/HeaderLogo";
+import Hero from "../../components/home/Hero/Hero";
+import Rule from "../../components/home/Rule";
+import FirstFeature from "../../components/svgs/FirstFeature";
+import LeftSquare from "../../components/svgs/LeftSquare";
+import RightSquare from "../../components/svgs/RightSquare";
+import SecondFeature from "../../components/svgs/SecondFeature";
+import ThirdFeature from "../../components/svgs/ThirdFeature";
+
+import styles from "./Home.module.css";
 
 const Home = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <div className="relative w-full h-full overflow-x-hidden text-darkGrey dark:text-white bg-white dark:bg-darkBg">
+    <div
+      id="home-screen"
+      className="relative w-full h-full overflow-x-hidden text-darkGrey dark:text-white bg-white dark:bg-darkBg"
+    >
       <header className="absolute top-0 flex items-center h-16 w-full px-36">
         <HeaderLogo />
       </header>
@@ -94,17 +99,25 @@ const Home = () => {
         <div className="relative flex items-center justify-center h-[480px] w-[900px] mt-20">
           <Link
             to="/play"
-            className="font-bold text-[144px] hover:bg-gradient-to-br hover:from-primary hover:to-darkGrey dark:hover:to-primaryLight hover:bg-clip-text hover:text-transparent transition-all focus:scale-103"
+            className="font-bold text-[144px] hover:bg-gradient-to-br hover:from-primary hover:to-primary/50 dark:hover:to-primaryLight hover:bg-clip-text hover:text-transparent transition-all focus:scale-103"
           >
             Play
           </Link>
 
           {/* ILLUSTRATIONS */}
 
-          <div className="absolute w-24 h-24 bg-primary right-14 top-8"></div>
-          <div className="absolute w-7 h-7 bg-[#8A8A8A] left-28 top-0"></div>
-          <div className="absolute w-28 h-28 bg-primaryLight dark:bg-[#80E4C1] left-0 translate-y-28"></div>
-          <div className="absolute w-60 h-60 bg-[#F8F8F8] dark:bg-[#242424] right-0 -bottom-28"></div>
+          <div
+            className={`absolute w-24 h-24 bg-primary right-14 top-8 ${styles["animate-square-one"]}`}
+          ></div>
+          <div
+            className={`absolute w-7 h-7 bg-[#8A8A8A] left-28 top-0 ${styles["animate-square-four"]}`}
+          ></div>
+          <div
+            className={`absolute w-28 h-28 bg-primaryLight dark:bg-[#80E4C1] left-0 bottom-16 ${styles["animate-square-two"]}`}
+          ></div>
+          <div
+            className={`absolute w-60 h-60 bg-[#F8F8F8] dark:bg-[#242424] right-0 -bottom-28 ${styles["animate-square-three"]}`}
+          ></div>
         </div>
       </section>
 

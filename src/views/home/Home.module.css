@@ -1,0 +1,93 @@
+.animate-square-one {
+  animation: animateSqrOne 22s ease-in-out alternate infinite;
+}
+.animate-square-two {
+  animation: animateSqrTwo 20s ease-in-out alternate infinite;
+}
+.animate-square-three {
+  animation: animateSqrThree 25s ease-in-out alternate infinite;
+}
+.animate-square-four {
+  animation: animateSqrFour 15s ease-in-out alternate infinite;
+}
+
+@keyframes animateSqrOne {
+  0% {
+    transform: translate(0, 0);
+  }
+  20% {
+    transform: translate(10%, 7%);
+  }
+  40% {
+    transform: translate(5%, 10%);
+  }
+  60% {
+    transform: translate(-5%, 5%);
+  }
+  80% {
+    transform: translate(0%, -5%);
+  }
+  100% {
+    transform: translate(10%, 0%);
+  }
+}
+@keyframes animateSqrTwo {
+  0% {
+    transform: translate(0, 0);
+  }
+  20% {
+    transform: translate(0%, 7%);
+  }
+  40% {
+    transform: translate(-5%, -10%);
+  }
+  60% {
+    transform: translate(2%, 15%);
+  }
+  80% {
+    transform: translate(-7%, 5%);
+  }
+  100% {
+    transform: translate(5%, 0%);
+  }
+}
+@keyframes animateSqrThree {
+  0% {
+    transform: translate(0, 0);
+  }
+  20% {
+    transform: translate(-5%, -5%);
+  }
+  40% {
+    transform: translate(-5%, 7%);
+  }
+  60% {
+    transform: translate(5%, -5%);
+  }
+  80% {
+    transform: translate(3%, -5%);
+  }
+  100% {
+    transform: translate(5%, 0%);
+  }
+}
+@keyframes animateSqrFour {
+  0% {
+    transform: translate(0, 0);
+  }
+  20% {
+    transform: translate(0%, -5%);
+  }
+  40% {
+    transform: translate(-20%, 7%);
+  }
+  60% {
+    transform: translate(10%, 10%);
+  }
+  80% {
+    transform: translate(-10%, 8%);
+  }
+  100% {
+    transform: translate(3%, 10%);
+  }
+}
