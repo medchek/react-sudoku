@@ -5,15 +5,19 @@ import {
   setSeconds as setStoreSeconds,
   setMinutes as setStoreMinutes,
   setHours as setStoreHours,
-} from "../store/slices/timerSlice";
-import { RootState } from "../store/store";
-import { useAppDispatch, useAppSelector } from "../store/storeHooks";
-import Icon from "./Icon";
+} from "../../store/slices/timerSlice";
+import { RootState } from "../../store/store";
+import { useAppDispatch, useAppSelector } from "../../store/storeHooks";
+import Icon from "../common/Icon";
 
 const addZeroToSingleNumber = (n: number) => (n <= 9 ? `0${n}` : n);
 
 const Timer = () => {
   const isPaused = useAppSelector((state: RootState) => state.timer.isPaused);
+  const isTabFocused = useAppSelector(
+    (state: RootState) => state.ui.isTabFocused
+  );
+
   const difficulty = useAppSelector(
     (state: RootState) => state.grid.difficulty
   );
@@ -31,7 +35,7 @@ const Timer = () => {
 
   useEffect(() => {
     if (isPaused) return;
-
+    if (!isTabFocused) return;
     const setSeconds = (n: number) => dispatch(setStoreSeconds(n));
 
     const setMinutes = (n: number) => dispatch(setStoreMinutes(n));
@@ -60,7 +64,7 @@ const Timer = () => {
     return () => {
       clearInterval(interval);
     };
-  }, [seconds, minutes, hours, isPaused, dispatch]);
+  }, [seconds, minutes, hours, isPaused, isTabFocused, dispatch]);
 
   return (
     <span className="space-x-2 flex items-center">

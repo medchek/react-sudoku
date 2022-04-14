@@ -1,11 +1,11 @@
-import Grid from "../components/Grid";
-import Logo from "../components/svgs/Logo";
-import Operations from "../components/Operations";
+import Grid from "../components/sudoku/Grid";
+import Operations from "../components/sudoku/Operations";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { pauseTimer, unpauseTimer } from "../store/slices/timerSlice";
 import { useAppSelector } from "../store/storeHooks";
 import { RootState } from "../store/store";
+import HeaderLogo from "../components/common/HeaderLogo";
+import { setTabIsFocused } from "../store/slices/uiSlice";
 
 const Sudoko = () => {
   const dispatch = useDispatch();
@@ -16,9 +16,9 @@ const Sudoko = () => {
     const onVisibilityChange = () => {
       if (diffuculty === null) return;
       if (document.visibilityState === "hidden") {
-        dispatch(pauseTimer());
+        dispatch(setTabIsFocused(false));
       } else {
-        dispatch(unpauseTimer());
+        dispatch(setTabIsFocused(true));
       }
     };
     document.addEventListener("visibilitychange", onVisibilityChange);
@@ -28,14 +28,9 @@ const Sudoko = () => {
   }, [dispatch, diffuculty]);
 
   return (
-    <div className="flex flex-col px-4 sm:px-8 md:px-10 lg:px-20 xl:px-40 2xl:px-72 w-full h-full overflow-hidden">
+    <div className="flex flex-col px-4 sm:px-8 md:px-10 lg:px-20 xl:px-40 2xl:px-72 w-full h-full overflow-hidden bg-white dark:bg-darkBg">
       <header className="w-full h-12 min-h-[3rem] sm:h-14 sm:min-h-[3.5rem] pt-1 md:pt-2">
-        <a className="flex items-center space-x-2 xl:space-x-3 w-44" href=".">
-          <Logo className="w-8 h-8 md:w-9 md:h-9 xl:w-10 xl:h-10" />
-          <span className="font-semibold text-darkGrey text-2xl xl:text-3xl">
-            Sudoku
-          </span>
-        </a>
+        <HeaderLogo />
       </header>
       <main className="flex flex-col justify-between grow">
         <div
