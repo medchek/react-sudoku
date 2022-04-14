@@ -1,5 +1,5 @@
 import React from "react";
-import { CellState } from "../store/slices/gridSlice";
+import { CellState } from "../../store/slices/gridSlice";
 import Cell from "./Cell";
 
 interface Props {

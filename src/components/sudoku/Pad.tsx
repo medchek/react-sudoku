@@ -1,11 +1,11 @@
 import React from "react";
-import DeleteNumberButton from "./buttons/DeleteNumberButton";
-import ToggleButton from "./buttons/ToggleButton/ToggleButton";
-import SetNumberButton from "./buttons/SetNumberButton";
-import { useAppDispatch, useAppSelector } from "../store/storeHooks";
-import { setCellNumber } from "../store/slices/gridSlice";
-import HintButton from "./buttons/HintButton";
-import { RootState } from "../store/store";
+import DeleteNumberButton from "../buttons/DeleteNumberButton";
+import ToggleButton from "../buttons/ToggleButton/ToggleButton";
+import SetNumberButton from "../buttons/SetNumberButton";
+import { useAppDispatch, useAppSelector } from "../../store/storeHooks";
+import { setCellNumber } from "../../store/slices/gridSlice";
+import HintButton from "../buttons/HintButton";
+import { RootState } from "../../store/store";
 
 const Pad = () => {
   const dispatch = useAppDispatch();
