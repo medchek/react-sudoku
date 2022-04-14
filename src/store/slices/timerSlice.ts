@@ -24,6 +24,9 @@ export const timerSlice = createSlice({
     unpauseTimer(state) {
       state.isPaused = false;
     },
+    pauseTimer(state) {
+      state.isPaused = true;
+    },
     setSeconds(state, action: PayloadAction<number>) {
       state.seconds = action.payload;
     },
@@ -41,6 +44,7 @@ export const timerSlice = createSlice({
 
 export const {
   togglePauseTimer,
+  pauseTimer,
   unpauseTimer,
   setSeconds,
   setMinutes,
