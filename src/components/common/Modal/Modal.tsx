@@ -1,5 +1,7 @@
 import React, { KeyboardEvent, ReactNode, useEffect, useRef } from "react";
 import { Portal } from "react-portal";
+import { RootState } from "../../../store/store";
+import { useAppSelector } from "../../../store/storeHooks";
 
 import styles from "./Modal.module.css";
 
@@ -26,6 +28,8 @@ const Modal = ({
   className,
   noEscape,
 }: Props) => {
+  const isDarkMode = useAppSelector((state: RootState) => state.ui.isDarkMode);
+
   const modalRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     modalRef.current?.focus();
@@ -49,14 +53,16 @@ const Modal = ({
         ref={modalRef}
         id="modal"
         role="dialog"
-        className="absolute top-0 flex items-center justify-center min-h-screen min-w-full w-screen h-screen overflow-hidden"
+        className={`absolute top-0 flex items-center justify-center min-h-screen min-w-full w-screen h-screen overflow-hidden ${
+          isDarkMode ? "dark" : ""
+        }`}
         tabIndex={0}
         onKeyDown={handleOnKeyDown}
       >
         <div
           id="modal-overlay"
           onClick={handleOnClickOutside}
-          className={`absolute top-0 w-full h-full bg-slate-800/50 dark:bg-zinc-900/90 z-[100] ${styles["animate-fade"]}`}
+          className={`absolute top-0 w-full h-full bg-slate-800/50 dark:bg-stone-900/90 z-[100] ${styles["animate-fade"]}`}
         ></div>
 
         <div

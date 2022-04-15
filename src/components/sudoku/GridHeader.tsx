@@ -31,7 +31,7 @@ const GridHeader = () => {
       dispatch(pauseTimer());
       setIsModalOpen(true);
     }
-  }, [currentDifficulty]);
+  }, [currentDifficulty, dispatch]);
 
   const displayDifficultyName = (): string => {
     switch (currentDifficulty) {
@@ -63,16 +63,16 @@ const GridHeader = () => {
     <Fragment>
       {currentDifficulty !== null && (
         <div className="flex items-center justify-between h-10 w-full text-zinc-400 py-2 text-sm">
-          <p>
-            Difficulty:
-            <span className="text-zinc-600 font-medium">
+          <p className="space-x-1">
+            <span>Difficulty:</span>
+            <span className="text-zinc-600 dark:text-zinc-200 font-medium">
               {displayDifficultyName()}
             </span>
           </p>
 
           <button
             type="button"
-            className="bg-zinc-100  px-2 py-1 rounded hover:bg-primary hover:text-white transition-colors focus:ring-2 focus:ring-primaryLight"
+            className="bg-zinc-100 dark:bg-zinc-600 dark:text-zinc-200 px-2 py-1 rounded hover:bg-primary hover:text-white transition-colors focus:ring-2 focus:ring-primaryLight"
             title="Start a new game"
             onClick={() => setIsModalOpen(true)}
           >

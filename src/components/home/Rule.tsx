@@ -7,7 +7,7 @@ interface Props {
 
 const Rule = ({ number, text }: Props) => {
   return (
-    <section className="flex w-[350px] space-x-4">
+    <section className="flex md:w-[500px] 2xl:w-[350px] space-x-4">
       <p className="text-[45px] font-semibold text-primary">{number}</p>
       <p className="font-thin text-[26px]">{text}</p>
     </section>

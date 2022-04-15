@@ -75,7 +75,7 @@ const Timer = () => {
       <button
         disabled={difficulty === null}
         title={isPaused ? "Continue" : "Pause the game"}
-        className="bg-slate-100 w-6 h-6 rounded-md flex items-center justify-center hover:bg-slate-200 active:bg-slate-200 outline-none active:ring-1 ring-primary/70"
+        className="bg-slate-100 w-6 h-6 rounded-md flex items-center justify-center hover:bg-slate-200 active:bg-slate-200 dark:bg-zinc-800 outline-none active:ring-1 ring-primary/70"
         onClick={handleOnClick}
       >
         <Icon className="w-5 h-5" icon={isPaused ? mdiPlay : mdiPause} />

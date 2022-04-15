@@ -1,7 +1,7 @@
 import React from "react";
-import { RootState } from "../store/store";
-import { useAppSelector } from "../store/storeHooks";
-import Switch from "./Switch";
+import { RootState } from "../../store/store";
+import { useAppSelector } from "../../store/storeHooks";
+import Switch from "../common/Switch";
 
 interface Props {
   text: string;

@@ -1,7 +1,7 @@
 import React from "react";
-import { unpauseTimer } from "../store/slices/timerSlice";
-import { RootState } from "../store/store";
-import { useAppDispatch, useAppSelector } from "../store/storeHooks";
+import { unpauseTimer } from "../../store/slices/timerSlice";
+import { RootState } from "../../store/store";
+import { useAppDispatch, useAppSelector } from "../../store/storeHooks";
 
 const Paused = () => {
   const difficulty = useAppSelector(
@@ -17,7 +17,9 @@ const Paused = () => {
   return (
     <div
       id="pause-screen"
-      className="flex flex-col items-center justify-center absolute top-0 left-0 right-0 bottom-0 z-100 bg-white dark:bg-darkBg space-y-2 border-4 border-primaryLight"
+      className={`${
+        difficulty === null ? "invisible" : ""
+      } flex flex-col items-center justify-center absolute top-0 left-0 right-0 bottom-0 z-100 bg-white dark:bg-darkBg space-y-2 border-4 border-primaryLight`}
     >
       <p className="font-medium text-xl md:text-2xl text-darkGrey dark:text-zinc-300 w-4/6 md:w-1/2 text-center">
         The game is currenty <span className="font-bold">Paused</span>

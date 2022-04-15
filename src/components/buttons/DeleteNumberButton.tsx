@@ -15,7 +15,7 @@ const DeleteNumberButton = ({ disabled }: Props) => {
   return (
     <BaseButton
       onClick={() => dispatch(resetCellNumber())}
-      className="font-semibold text-base transition-colors hover:ring-2 ring-red-500/70 active:bg-red-400 text-[#D98484] active:text-white"
+      className="font-semibold text-base transition-colors hover:ring-2 ring-red-500/70 active:!bg-red-400 !text-[#D98484] active:!text-white"
       disable={disabled}
     >
       <Icon className="w-7 h-7 " icon={mdiCloseBoxOutline} />

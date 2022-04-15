@@ -136,7 +136,7 @@ const Grid = () => {
       className="relative flex flex-col items-center justify-center outline-none w-screen sm:w-[550px] lg:w-[600px] xl:w-[630px] h-full px-4 grow"
     >
       <GridHeader />
-      <div className="relative flex flex-col items-center justify-center w-full h-[100vw] sm:h-[550px] lg:h-[600px] xl:h-[630px]  sm:px-0">
+      <div className="relative flex flex-col items-center justify-center w-full h-[100vw] sm:h-[550px] lg:h-[600px] xl:h-[630px]  sm:px-0 bg-white dark:bg-darkGreyBg">
         {displayGrid}
         <Suspense
           fallback={

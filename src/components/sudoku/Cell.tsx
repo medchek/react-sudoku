@@ -180,11 +180,12 @@ const Cell = ({ cell, col, row }: Props) => {
   return (
     <div
       className={[
-        // "flex items-center justify-center w-[84px] h-[84px] ",
-        "relative flex items-center justify-center xl:w-[70px] xl:h-[70px] text-xl sm:text-2xl lg:text-[1.7rem] font-medium hover:shadow-inner outline-none cursor-pointer select-none basis-0 grow",
-        row === 0 ? "border-t-[3px] md:border-t-4 border-primaryLight" : "",
+        "relative flex items-center justify-center xl:w-[70px] xl:h-[70px] text-xl sm:text-2xl lg:text-[1.7rem] font-medium hover:shadow-inner outline-none cursor-pointer select-none basis-0 grow ",
+        row === 0
+          ? "border-t-[3px] md:border-t-4 border-primaryLight dark:border-darkCellGreen"
+          : "",
         row === 8 || row === 2 || row === 5
-          ? "border-b-[3px] md:border-b-4 border-primaryLight"
+          ? "border-b-[3px] md:border-b-4 border-primaryLight dark:border-darkCellGreen"
           : "",
         row === 0 ||
         row === 1 ||
@@ -192,19 +193,21 @@ const Cell = ({ cell, col, row }: Props) => {
         row === 4 ||
         row === 6 ||
         row === 7
-          ? "border-b-2 border-b-lightGrey"
+          ? "border-b-2 border-b-lightGrey dark:border-b-darkCellGrey"
           : "",
-        col === 0 ? "border-l-[3px] md:border-l-4 border-primaryLight" : "",
+        col === 0
+          ? "border-l-[3px] md:border-l-4 border-primaryLight dark:border-darkCellGreen"
+          : "",
         col === 0 ||
         col === 1 ||
         col === 3 ||
         col === 4 ||
         col === 6 ||
         col === 7
-          ? "border-r-2 border-r-lightGrey"
+          ? "border-r-2 border-r-lightGrey dark:border-r-darkCellGrey"
           : "",
         col === 8 || col === 2 || col === 5
-          ? "border-r-[3px] md:border-r-4 border-primaryLight"
+          ? "border-r-[3px] md:border-r-4 border-primaryLight dark:border-darkCellGreen"
           : "",
         // `cell-row-${row} cell-col-${col} cell-sqr-${currentCellSquareNumber}`,
 
@@ -213,19 +216,21 @@ const Cell = ({ cell, col, row }: Props) => {
         // whether the current cell is the one selected
         // cell.isError
         cellHasDuplicates
-          ? `bg-red-100 ${!cell.isProtected ? "!text-red-500" : ""}`
+          ? `bg-red-100 dark:bg-red-500/30 ${
+              !cell.isProtected ? "!text-red-500" : ""
+            }`
           : // if the current cell instance the one selected
           isCurrentlySelected
-          ? "is-selected bg-primaryLight"
+          ? "is-selected bg-primaryLight dark:bg-[#35715b8e]"
           : // if the current cell NUMBER value matches the one selectedCell points to in the grid
           isCurrentCellNumberSameAsSelected // will basically highlight the same number in all the other cells
-          ? "bg-primaryLight/40"
+          ? "bg-primaryLight/40  dark:bg-zinc-700"
           : // whether the cell should be highlighted as part of row/col/sqr
           isHighlighted
-          ? "bg-slate-100/80"
+          ? "bg-slate-100/80 dark:bg-black"
           : "",
         cell.isProtected
-          ? "text-darkGrey/90"
+          ? "text-darkGrey/90 dark:text-zinc-50"
           : isCellNumberWrong
           ? "!text-red-500"
           : "text-primary",
