@@ -6,6 +6,7 @@ import { useAppSelector } from "../store/storeHooks";
 import { RootState } from "../store/store";
 import HeaderLogo from "../components/common/HeaderLogo";
 import { setTabIsFocused } from "../store/slices/uiSlice";
+import ThemeSelector from "../components/common/ThemeSelector";
 
 const Sudoko = () => {
   const dispatch = useDispatch();
@@ -29,8 +30,9 @@ const Sudoko = () => {
 
   return (
     <div className="flex flex-col px-4 sm:px-8 md:px-10 lg:px-20 xl:px-40 2xl:px-72 w-full h-full overflow-hidden bg-white dark:bg-darkBg">
-      <header className="w-full h-12 min-h-[3rem] sm:h-14 sm:min-h-[3.5rem] pt-1 md:pt-2">
+      <header className="flex items-center justify-between w-full h-12 min-h-[3rem] sm:h-14 sm:min-h-[3.5rem] pt-1 md:pt-2">
         <HeaderLogo />
+        <ThemeSelector />
       </header>
       <main className="flex flex-col justify-between grow">
         <div

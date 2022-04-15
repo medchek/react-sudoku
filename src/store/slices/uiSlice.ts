@@ -6,7 +6,7 @@ interface UiState {
 }
 
 const initialState: UiState = {
-  isDarkMode: false,
+  isDarkMode: localStorage.getItem("isDark") === "1" ? true : false,
   isTabFocused: true,
 };
 
@@ -19,6 +19,9 @@ export const uiSlice = createSlice({
         state.isDarkMode = action.payload;
       }
     },
+    toggleDarkMode(state) {
+      state.isDarkMode = !state.isDarkMode;
+    },
     setTabIsFocused(state, action: PayloadAction<boolean>) {
       if (state.isTabFocused !== action.payload) {
         state.isTabFocused = action.payload;
@@ -27,6 +30,6 @@ export const uiSlice = createSlice({
   },
 });
 
-export const { setDarkMode, setTabIsFocused } = uiSlice.actions;
+export const { setDarkMode, setTabIsFocused, toggleDarkMode } = uiSlice.actions;
 
 export default uiSlice.reducer;
