@@ -1,16 +1,17 @@
 import React, { lazy, Suspense } from "react";
-import { store } from "../store/store";
 import { Provider } from "react-redux";
 import { Route, Routes } from "react-router";
+import Root from "../components/common/Root";
+import { store } from "../store/store";
 // import Sudoko from "./Sudoko";
 
 const Sudoko = lazy(() => import("./Sudoko"));
-const Home = lazy(() => import("./Home"));
+const Home = lazy(() => import("./home/Home"));
 
 const App = () => {
   return (
     <Provider store={store}>
-      <div className="h-screen max-h-screen min-h-screen w-screen overflow-hidden">
+      <Root>
         <Routes>
           <Route
             path="/"
@@ -29,7 +30,7 @@ const App = () => {
             }
           />
         </Routes>
-      </div>
+      </Root>
     </Provider>
   );
 };
