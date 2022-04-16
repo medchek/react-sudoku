@@ -4,7 +4,7 @@ interface Props {
   className: string;
 }
 
-const SvgComponent = (props: Props) => (
+const Logo = (props: Props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 44 44"
@@ -24,4 +24,4 @@ const SvgComponent = (props: Props) => (
   </svg>
 );
 
-export default SvgComponent;
+export default Logo;
