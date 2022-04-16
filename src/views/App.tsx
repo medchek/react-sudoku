@@ -2,6 +2,7 @@ import React, { lazy, Suspense } from "react";
 import { Provider } from "react-redux";
 import { Route, Routes } from "react-router";
 import Root from "../components/common/Root";
+import RouteLoader from "../components/common/RouteLoader";
 import { store } from "../store/store";
 // import Sudoko from "./Sudoko";
 
@@ -16,7 +17,7 @@ const App = () => {
           <Route
             path="/"
             element={
-              <Suspense fallback={"Loading..."}>
+              <Suspense fallback={<RouteLoader />}>
                 <Home />
               </Suspense>
             }
@@ -24,11 +25,13 @@ const App = () => {
           <Route
             path="play"
             element={
-              <Suspense fallback={"Loading..."}>
+              <Suspense fallback={<RouteLoader />}>
                 <Sudoko />
               </Suspense>
             }
           />
+
+          <Route path="*" element={"NOT FOUND"} />
         </Routes>
       </Root>
     </Provider>
