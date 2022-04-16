@@ -14,12 +14,12 @@ const Hero = () => {
           id="cta"
           className="absolute left-0 w-full 2xl:w-1/2 z-[99] flex flex-col justify-center space-y-8 h-full pl-4 md:pl-8 lg:pl-14 xl:pl-20 2xl:pl-36"
         >
-          <p className="w-[350px] md:w-[450px] 2xl:w-[590px] font-bold text-4xl md:text-5xl 2xl:text-6xl">
+          <p className="w-[350px] md:w-[450px] lg:w-[480px] 2xl:w-[590px] font-bold text-4xl md:text-5xl 2xl:text-6xl">
             Enjoy a brain tease with a Sudoku
           </p>
           <Link
             to="/play"
-            className="font-semibold  shadow-lg flex items-center justify-center rounded-lg text-base 2xl:text-lg h-12 w-32 2xl:h-14 2xl:w-44 active:scale-103 transition-all hover:bg-zinc-100 2xl:dark:hover:bg-primary bg-white text-primary 2xl:dark:text-zinc-50 2xl:dark:bg-primary/90"
+            className="font-semibold  shadow-lg flex items-center justify-center rounded-lg text-base 2xl:text-lg h-12 w-32 md:w-36 2xl:h-14 2xl:w-44 active:scale-103 transition-all hover:bg-primary hover:text-zinc-50 2xl:dark:hover:bg-primary bg-white text-primary 2xl:dark:text-zinc-50 2xl:dark:bg-primary/90"
           >
             Start a Game
           </Link>

@@ -80,7 +80,7 @@ const Modal = ({
           <div className={`grow ${!customSize ? "py-4" : ""}`}>{children}</div>
 
           {!noButtons && (
-            <div className="h-auto w-full flex justify-end space-x-2 border-t py-2">
+            <div className="h-auto w-full flex justify-end space-x-2 border-t dark:border-zinc-600 py-2">
               <button
                 onClick={onConfirm}
                 type="button"
@@ -91,7 +91,7 @@ const Modal = ({
               <button
                 onClick={closeModal}
                 type="button"
-                className="flex items-center justify-center w-20 h-10 bg-slate-100 text-slate-400 hover:text-slate-500 font-medium rounded-md"
+                className="flex items-center justify-center w-20 h-10 bg-slate-100 dark:bg-zinc-700 text-slate-400 hover:text-slate-500 hover:dark:text-slate-200 font-medium rounded-md"
               >
                 Cancel
               </button>

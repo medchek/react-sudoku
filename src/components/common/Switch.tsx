@@ -9,7 +9,9 @@ interface Props {
 const Switch = ({ isOn, onClick, disabled }: Props) => {
   return (
     <button
-      className="flex items-center relative w-11 h-6 disabled:cursor-not-allowed"
+      className={`flex items-center relative w-11 h-6 disabled:cursor-not-allowed ${
+        disabled ? "opacity-20" : ""
+      }`}
       onClick={onClick}
       type="button"
       disabled={disabled ?? false}
@@ -20,9 +22,7 @@ const Switch = ({ isOn, onClick, disabled }: Props) => {
         } w-16 h-5 rounded-full transition-colors`}
       ></span>
       <span
-        className={`${isOn ? "left-[50%] bg-primary" : "left-0 bg-[#9C9C9C]"} ${
-          disabled ? "!bg-zinc-300" : ""
-        }
+        className={`${isOn ? "left-[50%] bg-primary" : "left-0 bg-[#9C9C9C]"}
         absolute h-6 w-6 rounded-full transition-all`}
       ></span>
     </button>

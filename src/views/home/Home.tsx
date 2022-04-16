@@ -46,7 +46,7 @@ const Home = () => {
         />
         <Feature
           title="Variety of Helpers"
-          text="You can either play the classic way, or help yourself with features such as automatic cell notes, errors detector and more."
+          text="You can either play the classic way, or help yourself with features such as automatic cell notes, errors detector and a variety of shortcuts."
           reverse
           illustration={
             <SecondFeature className="w-[340px] h-[340px] md:w-[360px] md:h-[360px] lg:w-[450px] lg:h-[450px] 2xl:w-[580px] 2xl:h-[580px]" />
@@ -153,7 +153,7 @@ const Home = () => {
 
         <div
           id="footer-links"
-          className="h-full flex items-center text-lg text-primary space-x-4"
+          className="h-full flex items-center text-xl xl:text-lg  text-darkGrey/80 dark:text-primary space-x-4"
         >
           <Link to="/play" className="hover:underline underline-offset-4">
             Play

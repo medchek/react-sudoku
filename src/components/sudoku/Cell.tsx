@@ -247,7 +247,7 @@ const Cell = ({ cell, col, row }: Props) => {
       </span>
 
       {cellNotes && cell.number === null && (
-        <div className="possibilites grid grid-cols-3 grid-rows-3 justify-items-center items-center w-full h-full bg-transparent absolute left-0 top-0 right-0 bottom-0 text-darkGrey/70 text-[0.7rem] sm:text-xs md:text-sm sm:font-thin">
+        <div className="possibilites grid grid-cols-3 grid-rows-3 justify-items-center items-center w-full h-full bg-transparent absolute left-0 top-0 right-0 bottom-0 text-darkGrey/70 dark:text-neutral-400 text-[0.7rem] sm:text-xs md:text-sm sm:font-thin">
           {cellNotes}
         </div>
       )}

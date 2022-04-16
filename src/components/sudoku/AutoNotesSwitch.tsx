@@ -51,7 +51,7 @@ const AutoNotesSwitch = (props: Props) => {
           closeOnClickOutside
           title="Auto Notes"
         >
-          <p className="text-zinc-700">
+          <p className="text-zinc-700 dark:text-zinc-100">
             Activating auto notes will disable{" "}
             <span className="font-medium">Note Mode</span> and remove all your
             manually set notes.

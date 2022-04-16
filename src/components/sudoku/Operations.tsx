@@ -7,7 +7,7 @@ const Operations = () => {
   return (
     <div
       id="operations"
-      className="relative flex flex-col-reverse md:flex-row justify-evenly grow md:grow-0 max-h-64 md:max-h-fit md:h-44 min-h-[11rem]  md:py-6 border-t-2 mt-2 md:mt-0 space-y-2 md:space-y-0"
+      className="relative flex flex-col-reverse md:flex-row justify-evenly grow md:grow-0 max-h-64 md:max-h-fit md:h-44 min-h-[11rem] py-1 md:py-6 border-t-2 dark:border-zinc-800 mt-2 md:mt-0 space-y-2 md:space-y-0"
     >
       <GridSwitches />
       <Pad />

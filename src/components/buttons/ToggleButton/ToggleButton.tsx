@@ -50,7 +50,7 @@ const ToggleButton = ({ text, disabled }: Props) => {
           isNoteMode
             ? " text-primary ring-2 ring-primary/70"
             : "text-[#9C9C9C] hover:ring-2"
-        }  font-bold text-xs sm:text-sm hover:ring-primary/70 transition-colors dark:bg-zinc-900 dark:disabled:opacity-30 dark:disabled:text-zinc-700`}
+        }  font-bold text-xs sm:text-sm hover:ring-primary/70 transition-colors dark:bg-zinc-900 disabled:opacity-30 dark:disabled:text-zinc-700`}
         customColors
         disable={disabled}
         onClick={handleOnClick}
@@ -69,7 +69,7 @@ const ToggleButton = ({ text, disabled }: Props) => {
           closeOnClickOutside
           title="Note Mode"
         >
-          <p className="text-zinc-700">
+          <p className="text-zinc-700 dark:text-zinc-100">
             Activating Note Mode will disable Auto Notes.
           </p>
         </Modal>
