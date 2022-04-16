@@ -89,15 +89,6 @@ export const getSquareNumber = ({
 };
 
 /**
- * Clones a 2d array
- * @param array the array to clone
- * @returns a new copy of the provided 2d array
- */
-const cloneArray = (array: number[][]): number[][] => {
-  return array.map((a) => a.slice());
-};
-
-/**
  * Randomly generates the position (indexes) where hints should be present in the sudoku grid
  * @param difficulty difficulty level which will affect the number of hints
  * @returns
@@ -129,28 +120,6 @@ const generateHintsPositions = (difficulty: Difficulty) => {
     .slice(0, numberOfHints)
     .sort((a, b) => a - b);
   return shuffled;
-};
-
-const pruneSudokuGrid = (
-  grid: number[][],
-  difficulty: Difficulty
-): (number | null)[][] => {
-  const clonedGrid: (number | null)[][] = cloneArray(grid);
-  const allowedHints = generateHintsPositions(difficulty);
-  let loopIteration = 0;
-
-  for (let rowIndex = 0; rowIndex < clonedGrid.length; rowIndex++) {
-    const row = clonedGrid[rowIndex];
-    for (let colIndex = 0; colIndex < row.length; colIndex++) {
-      if (allowedHints.indexOf(loopIteration) === -1) {
-        clonedGrid[rowIndex][colIndex] = null;
-      }
-
-      loopIteration++;
-    }
-  }
-
-  return clonedGrid;
 };
 
 /**
