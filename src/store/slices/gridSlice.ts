@@ -23,6 +23,12 @@ export interface CellState {
   immutableNumber: number;
   isProtected: boolean;
 }
+interface GridHistory {
+  cell: CellCoordinates;
+  number?: number | null;
+  notes?: number[];
+}
+
 interface GridState {
   grid: CellState[][];
   selectedCell: NullableCellCoordinates;
@@ -32,6 +38,7 @@ interface GridState {
   errorDetector: boolean;
   disableUnusable: boolean;
   difficulty: Difficulty | null;
+  history: GridHistory[];
 }
 
 // const grid: number[][] = [
@@ -59,6 +66,7 @@ const initialState: GridState = {
   errorDetector: false,
   disableUnusable: false,
   difficulty: null,
+  history: [],
 };
 
 export const gridSlice = createSlice({
@@ -69,9 +77,9 @@ export const gridSlice = createSlice({
       state,
       action: PayloadAction<{ number: number; isShift?: boolean }>
     ) {
-      const { row, col } = state.selectedCell;
+      const { row, col, square } = state.selectedCell;
 
-      if (row === null || col === null) return;
+      if (row === null || col === null || square === null) return;
 
       const cell = state.grid[row][col];
 
@@ -81,25 +89,49 @@ export const gridSlice = createSlice({
       if (!cell.isProtected) {
         if (!state.noteMode && !isShift) {
           // if note mode is not active, set the cell number instead of the notes
-          if (cell.number !== number) {
-            state.grid[row][col].number = number;
-          }
+          // if (cell.number !== number) {
+          // ** register previous number history before updating the number
+          state.history.push({
+            cell: { row, col, square },
+            number: cell.number,
+          });
+          // state update
+          state.grid[row][col].number = cell.number === number ? null : number;
+          // }
         } else {
           // only run this if the cell number is null
           if (cell.number !== null) return;
           const noteIndex = number - 1;
           // set notes otherwise
           const noteNumber = state.notes[row][col][noteIndex];
+          // ** register previous notes history before updating the notes
+          state.history.push({
+            cell: { row, col, square },
+            notes: [...state.notes[row][col]],
+          });
           // if the number number is 0 (i.e. not set) set it to the requested number, otherwise, set it back to 0
           state.notes[row][col][noteIndex] = noteNumber === 0 ? number : 0;
         }
       }
     },
     resetCellNumber(state) {
-      const { row, col } = state.selectedCell;
+      const { row, col, square } = state.selectedCell;
 
-      if (row === null || col === null) return;
+      if (row === null || col === null || square === null) return;
       const cell = state.grid[row][col];
+      // handle history before updating any state
+
+      // registering previous notes before deletion
+      state.history.push({
+        cell: { row, col, square },
+        notes: [...state.notes[row][col]],
+      });
+      // registering previous cell number
+      state.history.push({
+        cell: { row, col, square },
+        number: cell.number,
+      });
+
       // reset the cell notes as well
       state.notes[row][col] = [0, 0, 0, 0, 0, 0, 0, 0, 0];
 
@@ -108,17 +140,35 @@ export const gridSlice = createSlice({
       }
     },
     resetCellNotes(state) {
-      const { row, col } = state.selectedCell;
-      if (row === null || col === null) return;
+      const { row, col, square } = state.selectedCell;
+      if (row === null || col === null || square === null) return;
 
+      // register history before restting
+      state.history.push({
+        cell: { row, col, square },
+        notes: [...state.notes[row][col]],
+      });
       state.notes[row][col] = [0, 0, 0, 0, 0, 0, 0, 0, 0];
     },
+
     removeCellNoteNumber(
       state,
-      action: PayloadAction<{ number: number; row: number; col: number }>
+      action: PayloadAction<{
+        number: number;
+        row: number;
+        col: number;
+        square: number;
+      }>
     ) {
-      const { number, row, col } = action.payload;
-
+      const { number, row, col, square } = action.payload;
+      // register history before restting, only register if requested from cell that matches the selectedCell state
+      if (row === state.selectedCell.row && col === state.selectedCell.col) {
+        state.history.push({
+          cell: { row, col, square },
+          notes: [...state.notes[row][col]],
+        });
+      }
+      // reset the target cell note otherwise
       state.notes[row][col][number - 1] = 0;
     },
 
@@ -224,6 +274,28 @@ export const gridSlice = createSlice({
       // reset the notes array
       state.notes = createNotesArray();
     },
+    undo(state) {
+      const history = state.history;
+      if (history.length === 0) return;
+      const lastOperation = history[history.length - 1];
+      const {
+        cell: { row, col },
+      } = lastOperation;
+
+      // move the selected cell to history  cell coordinates
+      state.selectedCell = lastOperation.cell;
+
+      if (lastOperation.number !== undefined) {
+        state.grid[row][col].number = lastOperation.number;
+      }
+
+      if (lastOperation.notes !== undefined) {
+        state.notes[row][col] = lastOperation.notes;
+      }
+      // remove the last history after being done with it
+      history.pop();
+      // console.log(JSON.parse(JSON.stringify(lastOperation)));
+    },
   },
 });
 
@@ -244,5 +316,6 @@ export const {
   toggleDisableUnusable,
   revealHint,
   startNewGame,
+  undo,
 } = gridSlice.actions;
 export default gridSlice.reducer;

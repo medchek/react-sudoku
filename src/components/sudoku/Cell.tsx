@@ -145,7 +145,12 @@ const Cell = ({ cell, col, row }: Props) => {
       // the number to remove is the one added to the currently selected cell
 
       dispatch(
-        removeCellNoteNumber({ number: storeSelectedCellNumber, row, col })
+        removeCellNoteNumber({
+          number: storeSelectedCellNumber,
+          row,
+          col,
+          square: currentCellSquareNumber,
+        })
       );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
