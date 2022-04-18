@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from "../../store/storeHooks";
 import { setCellNumber } from "../../store/slices/gridSlice";
 import HintButton from "../buttons/HintButton";
 import { RootState } from "../../store/store";
+import UndoButton from "../buttons/UndoButton";
 
 const Pad = () => {
   const dispatch = useAppDispatch();
@@ -30,11 +31,15 @@ const Pad = () => {
   ));
 
   return (
-    <section id="pad" className="flex space-x-3 justify-center">
+    <section
+      id="pad"
+      className="flex space-x-1 md:space-x-3 justify-evenly md:justify-center"
+    >
       <div className="flex flex-col space-y-2 xl:space-y-3">
         <ToggleButton text="Note Mode" disabled={isPaused} />
         <HintButton disabled={isPaused} />
       </div>
+      <UndoButton disabled={isPaused} />
       <div className="grid grid-rows-2 grid-cols-5 gap-x-2 gap-y-2 xl:gap-x-3 xl:gap-y-3 ">
         {numberButtons}
         <DeleteNumberButton disabled={isPaused} />
