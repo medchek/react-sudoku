@@ -11,6 +11,7 @@ import {
   setCellNumber,
   toggleAutoNotes,
   toggleNoteMode,
+  undo,
 } from "../../store/slices/gridSlice";
 import { togglePauseTimer } from "../../store/slices/timerSlice";
 import { RootState } from "../../store/store";
@@ -36,80 +37,87 @@ const Grid = () => {
       // console.log("modifier?", e.getModifierState("Shift"));
 
       const isShift = e.getModifierState("Shift");
-
+      const isCtrl = e.getModifierState("Control");
       const key = e.code;
-      switch (key) {
-        case "ArrowUp":
-          dispatch(moveSelectedRow(VerticalDirections.Up));
-          break;
-        case "ArrowRight":
-          dispatch(moveSelectedCol(HorizontalDirections.Right));
-          break;
-        case "ArrowDown":
-          dispatch(moveSelectedRow(VerticalDirections.Down));
-          break;
-        case "ArrowLeft":
-          dispatch(moveSelectedCol(HorizontalDirections.Left));
-          break;
-        // numbers handling
-        case "Numpad1":
-        case "Digit1":
-          dispatch(setCellNumber({ number: 1, isShift }));
-          break;
-        case "Numpad2":
-        case "Digit2":
-          dispatch(setCellNumber({ number: 2, isShift }));
-          break;
-        case "Numpad3":
-        case "Digit3":
-          dispatch(setCellNumber({ number: 3, isShift }));
-          break;
-        case "Numpad4":
-        case "Digit4":
-          dispatch(setCellNumber({ number: 4, isShift }));
-          break;
-        case "Numpad5":
-        case "Digit5":
-          dispatch(setCellNumber({ number: 5, isShift }));
-          break;
-        case "Numpad6":
-        case "Digit6":
-          dispatch(setCellNumber({ number: 6, isShift }));
-          break;
-        case "Numpad7":
-        case "Digit7":
-          dispatch(setCellNumber({ number: 7, isShift }));
-          break;
-        case "Numpad8":
-        case "Digit8":
-          dispatch(setCellNumber({ number: 8, isShift }));
-          break;
-        case "Numpad9":
-        case "Digit9":
-          dispatch(setCellNumber({ number: 9, isShift }));
-          break;
-        case "Delete":
-        case "Numpad0":
-        case "Backspace":
-        case "Digit0":
-          dispatch(resetCellNumber());
-          break;
-        case "KeyP":
-          dispatch(togglePauseTimer());
-          break;
-        case "KeyN":
-          dispatch(toggleNoteMode());
-          break;
-        case "KeyH":
-          dispatch(revealHint());
-          break;
-        case "KeyA":
-        case "KeyQ":
-          dispatch(toggleAutoNotes());
-          break;
 
-        default:
-          return;
+      if (isCtrl) {
+        if (key === "KeyW") {
+          dispatch(undo());
+        }
+      } else {
+        switch (key) {
+          case "ArrowUp":
+            dispatch(moveSelectedRow(VerticalDirections.Up));
+            break;
+          case "ArrowRight":
+            dispatch(moveSelectedCol(HorizontalDirections.Right));
+            break;
+          case "ArrowDown":
+            dispatch(moveSelectedRow(VerticalDirections.Down));
+            break;
+          case "ArrowLeft":
+            dispatch(moveSelectedCol(HorizontalDirections.Left));
+            break;
+          // numbers handling
+          case "Numpad1":
+          case "Digit1":
+            dispatch(setCellNumber({ number: 1, isShift }));
+            break;
+          case "Numpad2":
+          case "Digit2":
+            dispatch(setCellNumber({ number: 2, isShift }));
+            break;
+          case "Numpad3":
+          case "Digit3":
+            dispatch(setCellNumber({ number: 3, isShift }));
+            break;
+          case "Numpad4":
+          case "Digit4":
+            dispatch(setCellNumber({ number: 4, isShift }));
+            break;
+          case "Numpad5":
+          case "Digit5":
+            dispatch(setCellNumber({ number: 5, isShift }));
+            break;
+          case "Numpad6":
+          case "Digit6":
+            dispatch(setCellNumber({ number: 6, isShift }));
+            break;
+          case "Numpad7":
+          case "Digit7":
+            dispatch(setCellNumber({ number: 7, isShift }));
+            break;
+          case "Numpad8":
+          case "Digit8":
+            dispatch(setCellNumber({ number: 8, isShift }));
+            break;
+          case "Numpad9":
+          case "Digit9":
+            dispatch(setCellNumber({ number: 9, isShift }));
+            break;
+          case "Delete":
+          case "Numpad0":
+          case "Backspace":
+          case "Digit0":
+            dispatch(resetCellNumber());
+            break;
+          case "KeyP":
+            dispatch(togglePauseTimer());
+            break;
+          case "KeyN":
+            dispatch(toggleNoteMode());
+            break;
+          case "KeyH":
+            dispatch(revealHint());
+            break;
+          case "KeyA":
+          case "KeyQ":
+            dispatch(toggleAutoNotes());
+            break;
+
+          default:
+            return;
+        }
       }
     };
 
