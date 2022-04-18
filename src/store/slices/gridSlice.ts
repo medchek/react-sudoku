@@ -91,10 +91,14 @@ export const gridSlice = createSlice({
           // if note mode is not active, set the cell number instead of the notes
           // if (cell.number !== number) {
           // ** register previous number history before updating the number
-          state.history.push({
-            cell: { row, col, square },
-            number: cell.number,
+          gridSlice.caseReducers.queueHistory(state, {
+            payload: {
+              cell: { row, col, square },
+              number: cell.number,
+            },
+            type: gridSlice.actions.queueHistory.type,
           });
+
           // state update
           state.grid[row][col].number = cell.number === number ? null : number;
           // }
@@ -105,9 +109,12 @@ export const gridSlice = createSlice({
           // set notes otherwise
           const noteNumber = state.notes[row][col][noteIndex];
           // ** register previous notes history before updating the notes
-          state.history.push({
-            cell: { row, col, square },
-            notes: [...state.notes[row][col]],
+          gridSlice.caseReducers.queueHistory(state, {
+            payload: {
+              cell: { row, col, square },
+              notes: [...state.notes[row][col]],
+            },
+            type: gridSlice.actions.queueHistory.type,
           });
           // if the number number is 0 (i.e. not set) set it to the requested number, otherwise, set it back to 0
           state.notes[row][col][noteIndex] = noteNumber === 0 ? number : 0;
@@ -119,23 +126,29 @@ export const gridSlice = createSlice({
 
       if (row === null || col === null || square === null) return;
       const cell = state.grid[row][col];
+      if (cell.isProtected) return;
+
+      const isEmptyCellNotes = state.notes[row][col].every((n) => n === 0);
+      // if there is nothing to reset, return;
+      if (cell.number === null && isEmptyCellNotes) return;
       // handle history before updating any state
 
       // registering previous notes before deletion
-      state.history.push({
-        cell: { row, col, square },
-        notes: [...state.notes[row][col]],
-      });
-      // registering previous cell number
-      state.history.push({
-        cell: { row, col, square },
-        number: cell.number,
+      gridSlice.caseReducers.queueHistory(state, {
+        payload: {
+          cell: { row, col, square },
+          notes: [...state.notes[row][col]],
+          number: cell.number,
+        },
+        type: gridSlice.actions.queueHistory.type,
       });
 
       // reset the cell notes as well
-      state.notes[row][col] = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+      if (!isEmptyCellNotes) {
+        state.notes[row][col] = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+      }
 
-      if (cell.number !== null && !cell.isProtected) {
+      if (cell.number !== null) {
         state.grid[row][col].number = null;
       }
     },
@@ -144,9 +157,12 @@ export const gridSlice = createSlice({
       if (row === null || col === null || square === null) return;
 
       // register history before restting
-      state.history.push({
-        cell: { row, col, square },
-        notes: [...state.notes[row][col]],
+      gridSlice.caseReducers.queueHistory(state, {
+        payload: {
+          cell: { row, col, square },
+          notes: [...state.notes[row][col]],
+        },
+        type: gridSlice.actions.queueHistory.type,
       });
       state.notes[row][col] = [0, 0, 0, 0, 0, 0, 0, 0, 0];
     },
@@ -161,14 +177,14 @@ export const gridSlice = createSlice({
       }>
     ) {
       const { number, row, col, square } = action.payload;
-      // register history before restting, only register if requested from cell that matches the selectedCell state
+      // register history before resetting. Only register if requested from a cell that matches the selectedCell state
       if (row === state.selectedCell.row && col === state.selectedCell.col) {
         state.history.push({
           cell: { row, col, square },
           notes: [...state.notes[row][col]],
         });
       }
-      // reset the target cell note otherwise
+      // reset the target cell note regardless
       state.notes[row][col][number - 1] = 0;
     },
 
@@ -256,12 +272,19 @@ export const gridSlice = createSlice({
     },
     revealHint(state) {
       // reveals a hint at the target cell
-      const { row, col } = state.selectedCell;
+      const { row, col, square } = state.selectedCell;
       if (row === null || col === null) return;
 
       const cellData = state.grid[row][col];
       state.grid[row][col].number = cellData.immutableNumber;
       state.grid[row][col].isProtected = true;
+      // * Additionally, remove any previous history that belongs to the revealed cell
+      state.history = state.history.filter(
+        (history) =>
+          history.cell.col !== col ||
+          history.cell.row !== row ||
+          history.cell.square !== square
+      );
     },
     setDifficulty(state, action: PayloadAction<Difficulty>) {
       state.difficulty = action.payload;
@@ -274,6 +297,22 @@ export const gridSlice = createSlice({
       // reset the notes array
       state.notes = createNotesArray();
     },
+    queueHistory(state, action: PayloadAction<GridHistory>) {
+      const { cell, notes, number } = action.payload;
+      const { row, col } = cell;
+      // remove first history item before adding a new one if the history exceeds 100 in length
+      // this will allow only a maximum of 100 undos
+      if (state.history.length === 100) state.history.shift();
+      // add to the history queue
+      state.history.push({
+        cell,
+        // only spread notes if notes are defined
+        ...(notes !== undefined && { notes: [...state.notes[row][col]] }),
+        // only spread number if number is defined
+        ...(number !== undefined && { number }),
+      });
+    },
+
     undo(state) {
       const history = state.history;
       if (history.length === 0) return;
