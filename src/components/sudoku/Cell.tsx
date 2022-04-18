@@ -172,14 +172,16 @@ const Cell = ({ cell, col, row }: Props) => {
    * Resets the selected cell coordinates in the store
    */
   const handleOnMiddleMouseClick = () => {
-    dispatch(
-      setSelectedCell({
-        row,
-        col,
-        square: currentCellSquareNumber,
-      })
-    );
-    dispatch(resetCellNumber());
+    if (cell.number !== null || !userCellNotes.every((n) => n === 0)) {
+      dispatch(
+        setSelectedCell({
+          row,
+          col,
+          square: currentCellSquareNumber,
+        })
+      );
+      dispatch(resetCellNumber());
+    }
   };
 
   return (
