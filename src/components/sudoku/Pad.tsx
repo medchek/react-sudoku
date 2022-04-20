@@ -31,10 +31,7 @@ const Pad = () => {
   ));
 
   return (
-    <section
-      id="pad"
-      className="flex space-x-1 md:space-x-3 justify-evenly md:justify-center"
-    >
+    <section id="pad" className="flex space-x-1 md:space-x-3 justify-center">
       <div className="flex flex-col space-y-2 xl:space-y-3">
         <ToggleButton text="Note Mode" disabled={isPaused} />
         <HintButton disabled={isPaused} />

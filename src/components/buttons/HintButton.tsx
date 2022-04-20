@@ -18,7 +18,7 @@ const HintButton = ({ disabled }: Props) => {
 
   return (
     <BaseButton
-      className="font-bold text-sm text-[#9C9C9C] active:text-primary/70 hover:ring-2 hover:ring-primary/70 transition-all"
+      className="font-bold text-sm active:text-primary/70 hover:ring-2 hover:ring-primary/70 transition-all"
       onClick={handleOnClick}
       disable={disabled}
     >

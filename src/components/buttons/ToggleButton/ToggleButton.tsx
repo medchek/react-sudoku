@@ -58,7 +58,7 @@ const ToggleButton = ({ text, disabled }: Props) => {
         {text}
         {isNoteMode && (
           <span
-            className={`absolute h-4 w-4 sm:w-5 sm:h-5 bg-primary rounded-full shadow-md -top-2 -right-2 ${styles["animate-scale"]}`}
+            className={`absolute h-4 w-4 sm:w-5 sm:h-5 bg-primary rounded-full shadow-md -top-2 -left-2 md:left-auto md:-right-2 pointer-events-none z-10 ${styles["animate-scale"]}`}
           ></span>
         )}
       </BaseButton>

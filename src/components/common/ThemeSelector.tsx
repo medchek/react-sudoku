@@ -19,7 +19,7 @@ const ThemeSelector = () => {
 
   return (
     <button
-      className="flex justify-center items-center relative z-[100] w-9 h-9 bg-primaryLight dark:bg-zinc-800 dark:text-primaryLight active:bg-primaryLight/70 text-darkGrey rounded-md"
+      className="flex justify-center items-center relative z-[100] w-8 h-8 sm:w-9 sm:h-9 bg-primaryLight dark:bg-zinc-800 dark:text-primaryLight active:bg-primaryLight/70 text-darkGrey rounded-md"
       onClick={handleOnClick}
     >
       <Icon

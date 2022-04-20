@@ -72,7 +72,7 @@ const GridHeader = () => {
 
           <button
             type="button"
-            className="bg-zinc-100 dark:bg-zinc-600 dark:text-zinc-200 px-2 py-1 rounded hover:bg-primary hover:text-white transition-colors focus:ring-2 focus:ring-primaryLight"
+            className="bg-zinc-100 dark:bg-zinc-800 dark:text-zinc-200 px-2 py-1 rounded hover:bg-primary hover:text-white dark:hover:bg-zinc-700 transition-colors focus:ring-2 focus:ring-primaryLight"
             title="Start a new game"
             onClick={() => setIsModalOpen(true)}
           >

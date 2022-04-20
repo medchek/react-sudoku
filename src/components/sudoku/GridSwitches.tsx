@@ -53,7 +53,7 @@ const GridSwitches = () => {
         type="button"
         onClick={() => setIsShown(!isShown)}
         disabled={isPaused}
-        className="relative md:hidden h-9 text-sm bg-zinc-100 active:bg-primaryLight text-zinc-500/80 dark:text-zinc-200 rounded-md font-medium z-50 disabled:cursor-not-allowed disabled:text-zinc-300 dark:bg-zinc-800 disabled:bg-zinc-50 disabled:dark:opacity-20"
+        className="relative md:hidden h-8 text-sm bg-zinc-100 active:bg-primaryLight text-zinc-500/80 dark:text-zinc-200 rounded-md font-medium z-50 disabled:cursor-not-allowed disabled:text-zinc-300 dark:bg-zinc-800 disabled:bg-zinc-50 disabled:dark:opacity-20"
       >
         More
       </button>
