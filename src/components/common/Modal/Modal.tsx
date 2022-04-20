@@ -77,7 +77,13 @@ const Modal = ({
           {title && title.length > 0 && (
             <p className="text-xl font-semibold dark:text-zinc-100">{title}</p>
           )}
-          <div className={`grow ${!customSize ? "py-4" : ""}`}>{children}</div>
+          <div
+            className={`flex flex-col grow h-full overflow-hidden ${
+              !customSize ? "py-4" : ""
+            }`}
+          >
+            {children}
+          </div>
 
           {!noButtons && (
             <div className="h-auto w-full flex justify-end space-x-2 border-t dark:border-zinc-600 py-2">
