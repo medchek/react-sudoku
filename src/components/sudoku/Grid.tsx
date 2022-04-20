@@ -38,10 +38,15 @@ const Grid = () => {
 
       const isShift = e.getModifierState("Shift");
       const isCtrl = e.getModifierState("Control");
+      const isAlt = e.getModifierState("Alt");
       const key = e.code;
 
       if (isCtrl) {
-        if (key === "KeyW") {
+        if (key === "KeyW" || key === "KeyZ") {
+          dispatch(undo());
+        }
+      } else if (isAlt) {
+        if (key === "Backspace") {
           dispatch(undo());
         }
       } else {
