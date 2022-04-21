@@ -4,6 +4,7 @@ import { Route, Routes } from "react-router";
 import Root from "../components/common/Root";
 import RouteLoader from "../components/common/RouteLoader";
 import { store } from "../store/store";
+import NotFound from "./NotFound";
 // import Sudoko from "./Sudoko";
 
 const Sudoko = lazy(() => import("./Sudoko"));
@@ -31,7 +32,7 @@ const App = () => {
             }
           />
 
-          <Route path="*" element={"NOT FOUND"} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Root>
     </Provider>
