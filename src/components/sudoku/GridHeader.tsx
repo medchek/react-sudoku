@@ -81,10 +81,10 @@ const GridHeader = () => {
         </div>
       )}
 
-      <Suspense fallback="Loading...">
+      <Suspense fallback={null}>
         {isModalOpen && (
           <Modal
-            noEscape
+            noEscape={currentDifficulty === null ? true : false}
             closeOnClickOutside={currentDifficulty === null ? false : true}
             noButtons
             closeModal={() => setIsModalOpen(false)}
