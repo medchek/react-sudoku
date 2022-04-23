@@ -14,7 +14,10 @@ const Pad = () => {
   const isPaused = useAppSelector((state: RootState) => state.timer.isPaused);
 
   return (
-    <section id="pad" className="flex space-x-1 md:space-x-3 justify-center">
+    <section
+      id="pad"
+      className="relative z-10 flex space-x-2 md:space-x-3 justify-center"
+    >
       <div className="flex flex-col space-y-2 xl:space-y-3">
         <ToggleButton text="Note Mode" disabled={isPaused} />
         <HintButton disabled={isPaused} />

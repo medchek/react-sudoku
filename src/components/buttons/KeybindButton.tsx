@@ -29,8 +29,11 @@ const KeybindButton = (props: Props) => {
         className="hidden md:flex items-center justify-center h-7 md:h-8 px-2 bg-slate-100 hover:bg-slate-50  active:ring-2 ring-primary text-zinc-500 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700 text-sm rounded md:mt-1 font-medium space-x-1"
         onClick={() => setIsOpen(true)}
       >
-        <span>KEYBINDS</span>
-        <Icon icon={mdiKeyboardVariant} className="w-5 h-5 md:w-6 md:h-6" />
+        <span className="text-xs lg:text-sm">KEYBINDS</span>
+        <Icon
+          icon={mdiKeyboardVariant}
+          className="hidden lg:inline-block w-5 h-5 md:w-6 md:h-6"
+        />
       </button>
       {isOpen && (
         <Suspense fallback={null}>
