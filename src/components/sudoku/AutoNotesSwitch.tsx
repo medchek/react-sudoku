@@ -43,6 +43,7 @@ const AutoNotesSwitch = (props: Props) => {
         text="Auto Notes"
         isOn={isAutoNotesOn}
         onClick={toggleAutoNotes}
+        tooltip="Automatically sets the notes of all the empty cells and keeps updating them"
       />
       {showModal && (
         <Modal
