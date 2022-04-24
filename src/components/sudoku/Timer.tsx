@@ -9,8 +9,7 @@ import {
 import { RootState } from "../../store/store";
 import { useAppDispatch, useAppSelector } from "../../store/storeHooks";
 import Icon from "../common/Icon";
-
-const addZeroToSingleNumber = (n: number) => (n <= 9 ? `0${n}` : n);
+import TimerDisplay from "../common/TimerDisplay";
 
 const Timer = () => {
   const isPaused = useAppSelector((state: RootState) => state.timer.isPaused);
@@ -68,10 +67,7 @@ const Timer = () => {
 
   return (
     <span className="space-x-2 flex items-center">
-      <span>
-        {hours !== 0 && addZeroToSingleNumber(hours) + ":"}
-        {addZeroToSingleNumber(minutes)}:{addZeroToSingleNumber(seconds)}
-      </span>
+      <TimerDisplay />
       <button
         disabled={difficulty === null}
         title={isPaused ? "Continue" : "Pause the game"}
