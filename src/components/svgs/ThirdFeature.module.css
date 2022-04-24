@@ -1,0 +1,19 @@
+.animate-float {
+  animation: float 20s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% {
+    transform: rotate(0) translate(0, 0);
+  }
+  30% {
+    transform: rotate(3deg) translate(7px, 0px);
+  }
+  60% {
+    transform: rotate(0deg) translate(0px, 5px);
+  }
+
+  100% {
+    transform: rotate(0) translate(0, 0);
+  }
+}

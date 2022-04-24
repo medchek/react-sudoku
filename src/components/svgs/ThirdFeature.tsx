@@ -2,6 +2,8 @@ import React from "react";
 import { mdiFlare, mdiWeatherNight } from "@mdi/js";
 import Icon from "../common/Icon";
 
+import styles from "./ThirdFeature.module.css";
+
 const ThridFeature = () => (
   <div className="relative flex justify-center items-center w-80 h-80 lg:w-96 lg:h-96 2xl:w-[531px] 2xl:h-[547px] ">
     <div className="absolute w-[180px] h-[180px] bg-primaryLight right-5 top-0"></div>
@@ -11,7 +13,7 @@ const ThridFeature = () => (
     <div className="relative z-10 flex items-center justify-center w-72 h-72 lg:w-80 lg:h-80 2xl:w-[460px] 2xl:h-[460px] dark:from-[#171717] dark:to-[#0A0A0A] bg-gradient-to-b to-[#000D20] from-[#000813] rounded-[29px] text-primaryLight">
       <Icon
         icon={mdiWeatherNight}
-        className="relative w-56 h-56 2xl:w-[338px] 2xl:h-[338px] text-primary"
+        className={`relative w-56 h-56 2xl:w-[338px] 2xl:h-[338px] text-primary ${styles["animate-float"]}`}
       />
       {/* STARS */}
 
