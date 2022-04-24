@@ -1,7 +1,8 @@
 import { mdiClose, mdiKeyboardVariant } from "@mdi/js";
 import React, { Fragment, Suspense, useEffect, useState } from "react";
 import { pauseTimer, unpauseTimer } from "../../store/slices/timerSlice";
-import { useAppDispatch } from "../../store/storeHooks";
+import { RootState } from "../../store/store";
+import { useAppDispatch, useAppSelector } from "../../store/storeHooks";
 import DisplayKeybind from "../common/DisplayKeybind";
 import Icon from "../common/Icon";
 import Modal from "../common/Modal/Modal";
@@ -10,14 +11,19 @@ type Props = {};
 
 const KeybindButton = (props: Props) => {
   const [isOpen, setIsOpen] = useState(false);
+  const isDifficultySelected = useAppSelector(
+    (state: RootState) => state.grid.difficulty
+  );
   const dispatch = useAppDispatch();
   useEffect(() => {
+    // only pause/unpause timer if the game is ongoin (i.e. difficulty has already been selected)
+    if (isDifficultySelected === null) return;
     if (isOpen) {
       dispatch(pauseTimer());
     } else {
       dispatch(unpauseTimer());
     }
-  }, [isOpen, dispatch]);
+  }, [isOpen, isDifficultySelected, dispatch]);
 
   const handleOnclose = () => {
     setIsOpen(false);

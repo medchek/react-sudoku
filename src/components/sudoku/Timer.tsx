@@ -33,8 +33,8 @@ const Timer = () => {
   };
 
   useEffect(() => {
-    if (isPaused) return;
-    if (!isTabFocused) return;
+    if (isPaused || difficulty === null || !isTabFocused) return;
+
     const setSeconds = (n: number) => dispatch(setStoreSeconds(n));
 
     const setMinutes = (n: number) => dispatch(setStoreMinutes(n));
@@ -63,7 +63,7 @@ const Timer = () => {
     return () => {
       clearInterval(interval);
     };
-  }, [seconds, minutes, hours, isPaused, isTabFocused, dispatch]);
+  }, [seconds, minutes, hours, isPaused, isTabFocused, difficulty, dispatch]);
 
   return (
     <span className="space-x-2 flex items-center">
