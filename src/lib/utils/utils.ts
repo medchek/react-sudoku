@@ -1,6 +1,6 @@
 import { Sudoku } from "../core/Sudoku";
 import type { CellState } from "./../../store/slices/gridSlice";
-import { Difficulty } from "./../enums/difficulties";
+import { Difficulty, DifficultyHintCount } from "./../enums/difficulties";
 
 export interface CellIndexes {
   row: number;
@@ -89,28 +89,31 @@ export const getSquareNumber = ({
 };
 
 /**
+ * Returns the number of hints that the grid should have based on the provided difficulty
+ * @param difficulty the game difficulty
+ * @returns number of hints allowed to be displayed
+ */
+export const getHintCount = (difficulty: Difficulty): number => {
+  switch (difficulty) {
+    case Difficulty.Easy: // 36 - 46
+      return DifficultyHintCount.Easy;
+    case Difficulty.Medium: // 32 - 35
+      return DifficultyHintCount.Medium;
+    case Difficulty.Hard: // 28 - 31
+      return DifficultyHintCount.Hard;
+    case Difficulty.Insane: // 17 - 27
+      return DifficultyHintCount.Insane;
+  }
+};
+
+/**
  * Randomly generates the position (indexes) where hints should be present in the sudoku grid
  * @param difficulty difficulty level which will affect the number of hints
  * @returns
  */
 const generateHintsPositions = (difficulty: Difficulty) => {
   const array: number[] = [];
-  let numberOfHints: number;
-
-  switch (difficulty) {
-    case Difficulty.Easy: // 36 - 46
-      numberOfHints = 36;
-      break;
-    case Difficulty.Medium: // 32 - 35
-      numberOfHints = 32;
-      break;
-    case Difficulty.Hard: // 28 - 31
-      numberOfHints = 28;
-      break;
-    case Difficulty.Insane: // 17 - 27
-      numberOfHints = 17;
-      break;
-  }
+  let numberOfHints: number = getHintCount(difficulty);
 
   for (let i = 0; i < 81; i++) {
     array[i] = i;
@@ -169,6 +172,43 @@ export const generateGrid = (difficulty: Difficulty): CellState[][] => {
 };
 
 /**
+ * Returns the numbers that cannot be in the target cell
+ */
+export const getCellForbidden = (
+  grid: CellState[][],
+  cellCoordinates: CellIndexes
+): number[] => {
+  const { row, col } = cellCoordinates;
+
+  const forbidden = new Set<number>();
+
+  // looping through row
+  for (let cellIndex = 0; cellIndex < grid[row].length; cellIndex++) {
+    const cell = grid[row][cellIndex];
+    if (cell.number !== null) forbidden.add(cell.number);
+  }
+  // looping through col
+  for (let rowIndex = 0; rowIndex < grid.length; rowIndex++) {
+    const cell = grid[rowIndex][col];
+    if (cell.number !== null) forbidden.add(cell.number);
+  }
+  // looping through the cell square
+  const squareYStart = getInitialSquareIndex(row);
+  const squareYEnd = getLastSquareIndex(row);
+  const squareXStart = getInitialSquareIndex(col);
+  const squareXEnd = getLastSquareIndex(col);
+
+  for (let rowIndex = squareYStart; rowIndex <= squareYEnd; rowIndex++) {
+    const row = grid[rowIndex];
+    for (let colIndex = squareXStart; colIndex <= squareXEnd; colIndex++) {
+      const cell = row[colIndex];
+      if (cell.number !== null) forbidden.add(cell.number);
+    }
+  }
+  return Array.from(forbidden);
+};
+
+/**
  * Calculates the possibilites that can go in the target cell based on the already filled numbers in the grid
  * @param grid the sudoku grid
  * @param cellCoordinates the row and col indicies of the cell to compute its possiblites
@@ -206,7 +246,7 @@ export const getCellPossibilities = (
   }
 
   const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-  const fobiddenArray = Array.from(forbidden);
+  const fobiddenArray = getCellForbidden(grid, cellCoordinates);
   // return only the numbers not present in the forbidden array
   return numbers.filter((n) => fobiddenArray.indexOf(n) === -1);
 };
@@ -287,4 +327,26 @@ export const createNotesArray = (): number[][][] => {
     }
   }
   return notes;
+};
+
+/**
+ * Returns the string name of the difficulty enum
+ * @param difficulty Difficulty enum
+ * @returns difficulty name string
+ */
+export const displayDifficultyName = (
+  difficulty: Difficulty | null
+): string => {
+  switch (difficulty) {
+    case Difficulty.Easy:
+      return "Easy";
+    case Difficulty.Medium:
+      return "Medium";
+    case Difficulty.Hard:
+      return "Hard";
+    case Difficulty.Insane:
+      return "Insane";
+    default:
+      return "Not set";
+  }
 };
