@@ -70,7 +70,7 @@ const Home = () => {
         </h2>
         <Link
           to="play"
-          className="flex justify-center items-center w-60 h-16 2xl:w-72 2xl:h-20 font-semibold text-2xl 2xl:text-3xl border-4 border-primary dark:border-white 2xl:dark:border-primary rounded-2xl hover:bg-primary hover:text-white transition-all focus:bg-primary/80 active:scale-103 relative z-10 bg-white dark:bg-darkBg shadow-xl xl:shadow-none"
+          className="flex justify-center items-center w-60 h-16 2xl:w-72 2xl:h-20 font-semibold text-2xl 2xl:text-3xl border-4 border-primary dark:border-white 2xl:dark:border-primary rounded-2xl hover:bg-primary dark:hover:bg-primary dark:hover:text-white hover:text-white transition-all focus:bg-primary/80 active:scale-103 relative z-10 bg-white dark:bg-darkBg shadow-xl xl:shadow-none"
         >
           Start a Game
         </Link>
