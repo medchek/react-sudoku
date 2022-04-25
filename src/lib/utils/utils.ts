@@ -113,7 +113,8 @@ export const getHintCount = (difficulty: Difficulty): number => {
  */
 const generateHintsPositions = (difficulty: Difficulty) => {
   const array: number[] = [];
-  let numberOfHints: number = getHintCount(difficulty);
+
+  const numberOfHints: number = getHintCount(difficulty);
 
   for (let i = 0; i < 81; i++) {
     array[i] = i;
