@@ -1,14 +1,11 @@
 import React, { Fragment, lazy, Suspense, useEffect, useState } from "react";
-import { Difficulty } from "../../lib/enums/difficulties";
 import { useAppDispatch, useAppSelector } from "../../store/storeHooks";
 
-import { startNewGame } from "../../store/slices/gridSlice";
 import { RootState } from "../../store/store";
-import {
-  pauseTimer,
-  resetTimer,
-  unpauseTimer,
-} from "../../store/slices/timerSlice";
+import { pauseTimer } from "../../store/slices/timerSlice";
+
+import { displayDifficultyName } from "../../lib/utils/utils";
+import DifficultySelector from "./DifficultySelector";
 
 const Modal = lazy(() => import("../common/Modal/Modal"));
 
@@ -20,44 +17,13 @@ const GridHeader = () => {
     (state: RootState) => state.grid.difficulty
   );
 
-  const handleStartNewGame = (difficulty: Difficulty) => {
-    dispatch(startNewGame(difficulty));
-    dispatch(resetTimer());
-    dispatch(unpauseTimer());
-    setIsModalOpen(false);
-  };
   useEffect(() => {
+    // when the user enter the play route directly throug the url, prompt difficulty selection
     if (currentDifficulty === null) {
       dispatch(pauseTimer());
       setIsModalOpen(true);
     }
   }, [currentDifficulty, dispatch]);
-
-  const displayDifficultyName = (): string => {
-    switch (currentDifficulty) {
-      case Difficulty.Easy:
-        return "Easy";
-      case Difficulty.Medium:
-        return "Medium";
-      case Difficulty.Hard:
-        return "Hard";
-      case Difficulty.Insane:
-        return "Insane";
-      default:
-        return "Not set";
-    }
-  };
-
-  const DifficultyButton = (text: string, difficulty: Difficulty) => {
-    return (
-      <button
-        className="w-full h-10 bg-primary hover:bg-primary/70 focus:ring-4 focus:ring-primaryLight text-white rounded-lg font-semibold active:scale-[1.03] transition-all"
-        onClick={() => handleStartNewGame(difficulty)}
-      >
-        {text}
-      </button>
-    );
-  };
 
   return (
     <Fragment>
@@ -66,13 +32,13 @@ const GridHeader = () => {
           <p className="space-x-1">
             <span>Difficulty:</span>
             <span className="text-zinc-600 dark:text-zinc-200 font-medium">
-              {displayDifficultyName()}
+              {displayDifficultyName(currentDifficulty)}
             </span>
           </p>
 
           <button
             type="button"
-            className="bg-zinc-100 dark:bg-zinc-800 dark:text-zinc-200 px-2 py-1 rounded hover:bg-primary hover:text-white dark:hover:bg-zinc-700 transition-colors focus:ring-2 focus:ring-primaryLight"
+            className="bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-200 px-2 py-1 rounded hover:bg-primary hover:text-white dark:hover:bg-zinc-700 transition-colors focus:ring-2 focus:ring-primaryLight text-xs sm:text-sm"
             title="Start a new game"
             onClick={() => setIsModalOpen(true)}
           >
@@ -91,17 +57,10 @@ const GridHeader = () => {
             customSize
             className="w-80 h-auto text-center py-4"
           >
-            <div id="difficulty-selector" className="space-y-4">
-              <h1 className="font-semibold text-xl text-darkGrey dark:text-zinc-100">
-                New Game
-              </h1>
-              <section className="flex flex-col items-center px-4 space-y-3 pb-2">
-                {DifficultyButton("Easy", Difficulty.Easy)}
-                {DifficultyButton("Medium", Difficulty.Medium)}
-                {DifficultyButton("Hard", Difficulty.Hard)}
-                {DifficultyButton("Insane", Difficulty.Insane)}
-              </section>
-            </div>
+            <DifficultySelector
+              close={() => setIsModalOpen(false)}
+              closeToHome={currentDifficulty === null}
+            />
           </Modal>
         )}
       </Suspense>
