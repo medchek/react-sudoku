@@ -32,7 +32,7 @@ const KeybindButton = (props: Props) => {
   return (
     <Fragment>
       <button
-        className="hidden md:flex items-center justify-center h-7 md:h-8 px-2 bg-slate-100 hover:bg-slate-50  active:ring-2 ring-primary text-zinc-500 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700 text-sm rounded md:mt-1 font-medium space-x-1"
+        className="hidden md:flex items-center justify-center h-7 md:h-8 px-2 bg-slate-100 hover:bg-slate-200 active:ring-2 ring-primary text-zinc-500 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700 text-sm rounded md:mt-1 font-medium space-x-1"
         onClick={() => setIsOpen(true)}
       >
         <span className="text-xs lg:text-sm">KEYBINDS</span>
