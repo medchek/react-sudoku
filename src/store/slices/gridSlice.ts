@@ -2,6 +2,7 @@ import {
   getSquareNumber,
   createNotesArray,
   generateGrid,
+  getHintCount,
 } from "./../../lib/utils/utils";
 import { HorizontalDirections } from "./../../lib/enums/directions";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
@@ -20,7 +21,7 @@ export interface NullableCellCoordinates {
 
 export interface CellState {
   number: number | null;
-  immutableNumber: number;
+  readonly immutableNumber: number;
   isProtected: boolean;
 }
 interface GridHistory {
@@ -39,6 +40,14 @@ interface GridState {
   disableUnusable: boolean;
   difficulty: Difficulty | null;
   history: GridHistory[];
+  filledCells: number;
+  isGameWon: boolean;
+  usedHelpers: {
+    hints: number;
+    autoNotes: boolean;
+    errorsDetector: boolean;
+    disabledUnusable: boolean;
+  };
 }
 
 // const grid: number[][] = [
@@ -67,6 +76,15 @@ const initialState: GridState = {
   disableUnusable: false,
   difficulty: null,
   history: [],
+  filledCells: 0, // number of cells have been filled, required to check when the grid should be checked for validity
+  // game completion state
+  isGameWon: false,
+  usedHelpers: {
+    hints: 0,
+    autoNotes: false,
+    errorsDetector: false,
+    disabledUnusable: false,
+  },
 };
 
 export const gridSlice = createSlice({
@@ -99,10 +117,27 @@ export const gridSlice = createSlice({
             type: gridSlice.actions.queueHistory.type,
           });
 
-          // state update
+          // Only increment the filled cells state if the cell number is not set yet
+          if (cell.number === null) {
+            state.filledCells++;
+          }
+          // and only decrement the filled cells state if the requested number is equal the the current one
+          // i.e. is meant to be toggled off
+          if (cell.number === number) {
+            state.filledCells =
+              state.filledCells - 1 < 0 ? 0 : state.filledCells - 1;
+          }
+
+          // state update (toggle number)
           state.grid[row][col].number = cell.number === number ? null : number;
-          // }
+
+          if (state.filledCells === 81) {
+            // verify game
+            gridSlice.caseReducers.verifyGame(state);
+          }
         } else {
+          // * NOTE INSERTION HANDLING
+
           // only run this if the cell number is null
           if (cell.number !== null) return;
           const noteIndex = number - 1;
@@ -150,6 +185,9 @@ export const gridSlice = createSlice({
 
       if (cell.number !== null) {
         state.grid[row][col].number = null;
+        // * Decrement the number of cells that have been filled since the cell is being reset
+        state.filledCells =
+          state.filledCells - 1 < 0 ? 0 : state.filledCells - 1;
       }
     },
     resetCellNotes(state) {
@@ -253,9 +291,17 @@ export const gridSlice = createSlice({
       }
     },
     toggleAutoNotes(state) {
+      // mark this helper as used
+      if (!state.usedHelpers.autoNotes) {
+        state.usedHelpers.autoNotes = true;
+      }
       state.autoNotes = !state.autoNotes;
     },
     setAutoNotes(state, action: PayloadAction<boolean>) {
+      // mark this helper as used
+      if (action.payload === true && !state.usedHelpers.autoNotes) {
+        state.usedHelpers.autoNotes = true;
+      }
       if (state.autoNotes !== action.payload) state.autoNotes = action.payload;
     },
     toggleNoteMode(state) {
@@ -265,9 +311,18 @@ export const gridSlice = createSlice({
       if (state.noteMode !== action.payload) state.noteMode = action.payload;
     },
     toggleErrorDetector(state) {
+      // mark this helper as used
+      if (!state.usedHelpers.errorsDetector) {
+        state.usedHelpers.errorsDetector = true;
+      }
+
       state.errorDetector = !state.errorDetector;
     },
     toggleDisableUnusable(state) {
+      // mark this helper as used
+      if (!state.usedHelpers.disabledUnusable) {
+        state.usedHelpers.disabledUnusable = true;
+      }
       state.disableUnusable = !state.disableUnusable;
     },
     revealHint(state) {
@@ -276,8 +331,16 @@ export const gridSlice = createSlice({
       if (row === null || col === null) return;
 
       const cellData = state.grid[row][col];
+      if (cellData.isProtected) return;
+
       state.grid[row][col].number = cellData.immutableNumber;
       state.grid[row][col].isProtected = true;
+      // increment the number of used hints
+      state.usedHelpers.hints++;
+
+      // increment filled cells count
+      state.filledCells++;
+
       // * Additionally, remove any previous history that belongs to the revealed cell
       state.history = state.history.filter(
         (history) =>
@@ -285,17 +348,52 @@ export const gridSlice = createSlice({
           history.cell.row !== row ||
           history.cell.square !== square
       );
+
+      if (state.filledCells === 81) {
+        // verify game
+        gridSlice.caseReducers.verifyGame(state);
+      }
     },
-    setDifficulty(state, action: PayloadAction<Difficulty>) {
-      state.difficulty = action.payload;
+    resetGridState(state) {
+      // reset the game won state
+      state.isGameWon =
+        state.usedHelpers.autoNotes =
+        state.usedHelpers.errorsDetector =
+        state.usedHelpers.disabledUnusable =
+          false;
+      state.usedHelpers.hints = 0;
+      // reset history
+      state.history = [];
+      // reset helpers
+      state.autoNotes = state.errorDetector = state.disableUnusable = false;
+      // reset the the number of filled cells
+      state.filledCells = 0;
+      // reset the selected cell
+      state.selectedCell.row =
+        state.selectedCell.col =
+        state.selectedCell.square =
+          null;
+      // reset the notes & notes array
+      state.noteMode = false;
+      state.notes = [];
+      // reset the difficulty
+      state.difficulty = null;
+      state.grid = [];
+
+      // GENERATORS
     },
     startNewGame(state, action: PayloadAction<Difficulty>) {
       const difficulty = action.payload;
+
+      gridSlice.caseReducers.resetGridState(state);
+      // GENERATORS
       state.difficulty = difficulty;
       // generate a new grid
       state.grid = generateGrid(difficulty);
       // reset the notes array
       state.notes = createNotesArray();
+      // set the number of already filled celled (hints) based on the difficulty
+      state.filledCells = getHintCount(difficulty);
     },
     queueHistory(state, action: PayloadAction<GridHistory>) {
       const { cell, notes, number } = action.payload;
@@ -324,16 +422,43 @@ export const gridSlice = createSlice({
       // move the selected cell to history  cell coordinates
       state.selectedCell = lastOperation.cell;
 
+      // if the last operation was related to cell number (either adding or removing)
       if (lastOperation.number !== undefined) {
+        // * FILLEDCOUNT HISTORY HANDLING
+        // handle the filledCell count when traversing history
+        if (lastOperation.number !== null) {
+          // only increment back if current cell number is null
+          if (state.grid[row][col].number === null) {
+            state.filledCells++;
+          }
+        } else {
+          // if previous number was null, decrement filledCount
+          state.filledCells--;
+        }
+        // * END FILLEDCOUNT HANDLING
         state.grid[row][col].number = lastOperation.number;
       }
 
+      // if the last operation was related to cell notes (either adding or removing)
       if (lastOperation.notes !== undefined) {
         state.notes[row][col] = lastOperation.notes;
       }
       // remove the last history after being done with it
       history.pop();
       // console.log(JSON.parse(JSON.stringify(lastOperation)));
+    },
+
+    verifyGame(state) {
+      if (state.filledCells !== 81) return;
+      for (let rowIndex = 0; rowIndex < state.grid.length; rowIndex++) {
+        const row = state.grid[rowIndex];
+
+        for (let colIndex = 0; colIndex < row.length; colIndex++) {
+          const cell = row[colIndex];
+          if (cell.number !== cell.immutableNumber) return;
+        }
+      }
+      state.isGameWon = true;
     },
   },
 });
@@ -355,6 +480,7 @@ export const {
   toggleDisableUnusable,
   revealHint,
   startNewGame,
+  resetGridState,
   undo,
 } = gridSlice.actions;
 export default gridSlice.reducer;
