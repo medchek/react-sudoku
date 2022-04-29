@@ -13,3 +13,11 @@ A Suduku game with some of the features that I have always thought lacking whene
 - Keybinds.
 - Dark mode.
 - Responsive.
+
+## Demo
+
+You can access the app using this [link](https://react-sudoku-chmd.netlify.app/).
+
+## License
+
+The app is released under the [GPL-3.0 license](https://www.gnu.org/licenses/gpl-3.0.en.html)
